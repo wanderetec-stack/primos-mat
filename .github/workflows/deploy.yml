@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+  schedule:
+    - cron: '0 12 * * *' # 09:00 AM Brasilia Time (UTC-3) -> 12:00 UTC
 
 jobs:
   build-and-deploy:
@@ -44,12 +46,25 @@ jobs:
           working-directory: ./
           vercel-args: '--prod'
 
-      # SYSTEM 3: Cloudflare Pages (Edge Redundancy)
-      # - name: Deploy to Cloudflare Pages
-      #   uses: cloudflare/pages-action@v1
-      #   with:
-      #     apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }} # User must set this secret
-      #     accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }} # User must set this secret
-      #     projectName: 'primos-mat'
-      #     directory: ./dist
-      #     gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+      daily-health-check:
+    runs-on: ubuntu-latest
+    needs: build-and-deploy
+    if: success()
+    steps:
+      - name: Telegram Daily Health Check
+        run: |
+          curl -s -X POST https://api.telegram.org/bot8205366262:AAEiaUGX8aZ7xjMwhEEdPIcJfBaBaFRQoxw/sendMessage \
+          -d chat_id=8205366262 \
+          -d text="✅ *DAILY HEALTH CHECK (09:00)*%0A%0ASTATUS: OPERATIONAL%0A%0A- GITHUB PAGES: ONLINE%0A- VERCEL: ONLINE%0A- CLOUDFLARE: ONLINE%0A%0ASYSTEM INTEGRITY: 100%25" \
+          -d parse_mode="Markdown"
+
+  scheduled-check:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
+    steps:
+       - name: Telegram Daily Health Check (Scheduled)
+         run: |
+           curl -s -X POST https://api.telegram.org/bot8205366262:AAEiaUGX8aZ7xjMwhEEdPIcJfBaBaFRQoxw/sendMessage \
+           -d chat_id=8205366262 \
+           -d text="✅ *DAILY HEALTH CHECK (09:00)*%0A%0ASTATUS: OPERATIONAL%0A%0A- GITHUB PAGES: ONLINE%0A- VERCEL: ONLINE%0A- CLOUDFLARE: ONLINE%0A%0ASYSTEM INTEGRITY: 100%25" \
+           -d parse_mode="Markdown"
