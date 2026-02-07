@@ -54,7 +54,7 @@ jobs:
       - name: Telegram Daily Health Check
         run: |
           curl -s -X POST https://api.telegram.org/bot8205366262:AAEiaUGX8aZ7xjMwhEEdPIcJfBaBaFRQoxw/sendMessage \
-          -d chat_id=8205366262 \
+          -d chat_id=7620121995 \
           -d text="✅ *DAILY HEALTH CHECK (09:00)*%0A%0ASTATUS: OPERATIONAL%0A%0A- GITHUB PAGES: ONLINE%0A- VERCEL: ONLINE%0A- CLOUDFLARE: ONLINE%0A%0ASYSTEM INTEGRITY: 100%25" \
           -d parse_mode="Markdown"
 
@@ -65,6 +65,6 @@ jobs:
        - name: Telegram Daily Health Check (Scheduled)
          run: |
            curl -s -X POST https://api.telegram.org/bot8205366262:AAEiaUGX8aZ7xjMwhEEdPIcJfBaBaFRQoxw/sendMessage \
-           -d chat_id=8205366262 \
+           -d chat_id=7620121995 \
            -d text="✅ *DAILY HEALTH CHECK (09:00)*%0A%0ASTATUS: OPERATIONAL%0A%0A- GITHUB PAGES: ONLINE%0A- VERCEL: ONLINE%0A- CLOUDFLARE: ONLINE%0A%0ASYSTEM INTEGRITY: 100%25" \
            -d parse_mode="Markdown"

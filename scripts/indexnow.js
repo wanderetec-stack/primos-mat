@@ -43,3 +43,21 @@ req.on('error', (error) => {
 req.write(data);
 req.end();
 console.log('🚀 IndexNow submission initiated...');
+
+// Telegram Notification
+const TG_TOKEN = '8205366262:AAEiaUGX8aZ7xjMwhEEdPIcJfBaBaFRQoxw';
+const TG_CHAT = '7620121995';
+const tgMessage = `🚀 *SEO INDEXING ALERT*%0A%0AIndexNow Pings Sent:%0A${urlList.map(u => `- ${u}`).join('%0A')}%0A%0AStatus: PENDING CONFIRMATION`;
+
+const tgOptions = {
+  hostname: 'api.telegram.org',
+  port: 443,
+  path: `/bot${TG_TOKEN}/sendMessage?chat_id=${TG_CHAT}&text=${tgMessage}&parse_mode=Markdown`,
+  method: 'GET'
+};
+
+const tgReq = https.request(tgOptions, (res) => {
+    // Silent
+});
+tgReq.end();
+

@@ -1,9 +1,11 @@
 {
   "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
+    { "source": "/wp-admin", "destination": "/api/v1/alert" },
+    { "source": "/.env", "destination": "/api/v1/alert" },
+    { "source": "/.git", "destination": "/api/v1/alert" },
+    { "source": "/admin", "destination": "/api/v1/alert" },
+    { "source": "/config", "destination": "/api/v1/alert" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [
     {

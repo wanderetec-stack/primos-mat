@@ -1,39 +1,17 @@
-import { useRef } from 'react';
+import { useEffect } from 'react';
 
 export const useTelegram = () => {
-  const hasTracked = useRef(false);
-
-  const trackVisit = async () => {
-    // Prevent double firing in React Strict Mode
-    if (hasTracked.current) return;
-    
-    // Optional: Skip localhost to avoid spam during dev
-    // if (window.location.hostname === 'localhost') return;
-
+  useEffect(() => {
+    // Send Heartbeat on mount (Session Start)
+    // We use fetch to call our Vercel Serverless Function to hide logic/tokens if needed (though tokens are in API code)
+    // Using no-cors to avoid blocking, though API supports CORS.
     try {
-      hasTracked.current = true;
-      const res = await fetch('/api/visit');
-      if (!res.ok) {
-        // If 404, we are likely on GitHub Pages (Static) where /api doesn't exist
-        // Silently fail or log for debug
-        console.debug('Monitor: API endpoint not available (Static Mode)');
-      }
-    } catch (error) {
-      console.debug('Monitor: Network error or offline');
+      fetch('/api/v1/visit?page=' + window.location.pathname)
+        .catch(err => console.error('Heartbeat skipped', err));
+    } catch (e) {
+      // Ignore errors
     }
-  };
+  }, []);
 
-  const sendAlert = async (type: string, details: string, count: number) => {
-    try {
-      await fetch('/api/alert', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type, details, count })
-      });
-    } catch (error) {
-      console.error('Monitor: Alert failed');
-    }
-  };
-
-  return { trackVisit, sendAlert };
+  return {};
 };
