@@ -26,6 +26,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
               `🕵️ IP: \`${ip || req.headers['x-forwarded-for'] || 'Unknown'}\`%0A` +
               `🤖 User-Agent: \`${userAgent || req.headers['user-agent'] || 'Unknown'}\`%0A` +
               `⚠️ Action: Potential Scanner/Bot detected.`;
+  } else if (type === 'alert') {
+    const { alertType, detail, count } = req.body || req.query;
+    message = `🛡️ *SECURITY SYSTEM ACTIVE* %0A%0A` +
+              `⚠️ Type: \`${alertType || 'General'}\`%0A` +
+              `📝 Detail: ${detail || 'No details'}%0A` +
+              `🔢 Count: ${count || 1}%0A` +
+              `🕵️ IP: \`${req.headers['x-forwarded-for'] || 'Unknown'}\``;
   } else {
     // Generic Visit
     message = `👤 *NEW VISITOR DETECTED* %0A%0A` +

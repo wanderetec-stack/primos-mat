@@ -1,7 +1,7 @@
 import https from 'https';
 
 const HOST = 'primos.mat.br';
-const KEY = 'f8a92b23c4d5e6f7a8b9c0d1e2f3a4b5'; // Match the file created
+const KEY = '250FA0136F31D550EEC7BCF623ECC0BB'; // Updated Key
 const KEY_LOCATION = `https://${HOST}/${KEY}.txt`;
 
 const urlList = [
@@ -68,4 +68,3 @@ const tgReq = https.request(tgOptions, (res) => {
 });
 tgReq.on('error', (e) => console.error('Telegram Error:', e));
 tgReq.end();
-

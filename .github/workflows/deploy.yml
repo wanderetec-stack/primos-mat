@@ -51,53 +51,53 @@ jobs:
           publish_dir: ./dist
           cname: primos.mat.br
 
-  # deploy-vercel:
-  #   name: Deploy Vercel (Performance)
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v4
+  deploy-vercel:
+    name: Deploy Vercel (Performance)
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-  #     - name: Download Artifact
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: dist
-  #         path: dist
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
 
-  #     - name: Deploy to Vercel
-  #       uses: amondnet/vercel-action@v20
-  #       with:
-  #         vercel-token: ${{ secrets.VERCEL_TOKEN }}
-  #         vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-  #         vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-  #         vercel-args: '--prod'
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v20
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: '--prod'
 
-  # deploy-cloudflare:
-  #   name: Deploy Cloudflare (Edge/WAF)
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   permissions:
-  #     contents: read
-  #     deployments: write
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v4
+  deploy-cloudflare:
+    name: Deploy Cloudflare (Edge/WAF)
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-  #     - name: Download Artifact
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: dist
-  #         path: dist
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
 
-  #     - name: Deploy to Cloudflare Pages
-  #       uses: cloudflare/pages-action@v1
-  #       with:
-  #         apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-  #         accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-  #         projectName: 'primos-mat'
-  #         directory: dist
-  #         gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: 'primos-mat'
+          directory: dist
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
 
   notify-status:
     name: Telegram Notification

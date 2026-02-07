@@ -51,10 +51,10 @@ const Privacy: React.FC = () => {
           <div className="space-y-3">
             <h3 className="text-xl font-mono font-bold text-white flex items-center gap-2">
               <span className="text-primary md:hidden"><FileText size={18} /></span>
-              3. Cookies & LGPD
+              3. Conformidade LGPD & Cookies
             </h3>
             <p className="text-gray-400 leading-relaxed">
-              Utilizamos estritamente cookies essenciais para funcionamento técnico e segurança (proteção contra ataques DDoS). Não utilizamos cookies de rastreamento publicitário. Estamos em total conformidade com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018).
+              Em estrita observância à Lei Geral de Proteção de Dados (Lei nº 13.709/2018), informamos que utilizamos apenas cookies tecnicamente essenciais para a segurança da aplicação (prevenção de ataques DDoS via Cloudflare) e análise anonimizada de tráfego. O rastreamento analítico (Google Analytics) permanece bloqueado por padrão até que você forneça seu consentimento explícito através de nosso painel de controle de privacidade.
             </p>
           </div>
         </div>

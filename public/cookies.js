@@ -1,8 +1,30 @@
 (function() {
   const CONSENT_KEY = 'cookie-consent';
-  
+  const GA_ID = 'G-DPQTFNGLBT';
+
+  function loadAnalytics() {
+    if (window.ga_initialized) return;
+    window.ga_initialized = true;
+
+    // Google Analytics (gtag.js)
+    const script = document.createElement('script');
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
+    script.async = true;
+    document.head.appendChild(script);
+
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', GA_ID);
+    
+    console.log('✅ Analytics Loaded (Consent Granted)');
+  }
+
   // Check if already consented
-  if (localStorage.getItem(CONSENT_KEY)) return;
+  if (localStorage.getItem(CONSENT_KEY) === 'true') {
+    loadAnalytics();
+    return;
+  }
 
   // Create styles if needed (using Tailwind classes so mostly covered, but animations might need help if not loaded yet)
   // Assuming Tailwind CSS is loaded via the main app or index.css
@@ -61,6 +83,7 @@
     if (acceptBtn) {
       acceptBtn.addEventListener('click', () => {
         localStorage.setItem(CONSENT_KEY, 'true');
+        loadAnalytics(); // Load GA immediately
         container.style.opacity = '0';
         setTimeout(() => container.remove(), 500);
       });

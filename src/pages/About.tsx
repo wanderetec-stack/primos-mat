@@ -14,10 +14,10 @@ const About: React.FC = () => {
       <div className="grid md:grid-cols-2 gap-8">
         <div className="glass-panel p-8 rounded-xl border-l-4 border-l-primary space-y-6">
           <p className="text-gray-300 leading-relaxed text-lg">
-            O <span className="text-primary font-bold">PRIMOS.MAT.BR</span> é uma iniciativa acadêmica e educacional dedicada à exploração da Teoria dos Números, com foco específico na natureza dos números primos.
+            O <span className="text-primary font-bold">PRIMOS.MAT.BR</span> é uma iniciativa acadêmica e educacional dedicada à exploração da Teoria dos Números, com foco específico na natureza dos números primos e sua aplicação crítica na segurança da informação.
           </p>
           <p className="text-gray-400 leading-relaxed">
-            Desenvolvido para ser uma referência em design e performance, este projeto une a elegância da matemática pura com a estética da tecnologia moderna.
+            Em um mundo digital governado por algoritmos, os números primos são a base da criptografia moderna (RSA/ECC). Nosso projeto visa desmistificar esses conceitos matemáticos complexos, oferecendo ferramentas de verificação de alta precisão e conteúdo educativo sobre como a matemática protege seus dados bancários e comunicações privadas.
           </p>
         </div>
 

@@ -6,8 +6,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const BASE_URL = 'https://primos.mat.br';
-const PUBLIC_DIR = path.resolve(__dirname, '../public'); // public is in root, scripts is in root/scripts? No, scripts is in root/scripts.
-// Wait, path.resolve(__dirname, '../public') is correct if scripts is in ./scripts
+const PUBLIC_DIR = path.resolve(__dirname, '../public');
 
 const pages = [
   { url: '/', priority: '1.0', freq: 'daily' },
@@ -26,8 +25,18 @@ ${pages.map(page => `  <url>
   </url>`).join('\n')}
 </urlset>`;
 
-const robots = `User-agent: *
+const robots = `User-agent: Googlebot
 Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: *
+Allow: /
+
 Sitemap: ${BASE_URL}/sitemap.xml
 `;
 

@@ -33,10 +33,10 @@ const Terms: React.FC = () => {
         <div className="glass-panel p-8 rounded-xl space-y-4 md:col-span-2 border-red-500/20">
           <div className="flex items-center gap-3 text-red-400 mb-2">
             <AlertCircle />
-            <h3 className="text-lg font-mono font-bold text-white">3. Isenção de Responsabilidade</h3>
+            <h3 className="text-lg font-mono font-bold text-white">3. Isenção de Responsabilidade (Disclaimer)</h3>
           </div>
           <p className="text-gray-400 text-sm leading-relaxed">
-            Os materiais e ferramentas no PRIMOS.MAT.BR são fornecidos 'como estão'. Não oferecemos garantias de precisão absoluta para propósitos críticos (como criptografia bancária real), embora nos esforcemos pela máxima exatidão matemática. O uso das informações é de sua inteira responsabilidade.
+            Os materiais e ferramentas disponibilizados no PRIMOS.MAT.BR são fornecidos "no estado em que se encontram" (as is). Embora nossos algoritmos de primalidade (como o Crivo de Eratóstenes e testes de Miller-Rabin implementados) sejam rigorosamente testados, não oferecemos garantias de precisão absoluta para fins críticos de segurança industrial ou financeira. O uso das informações para implementação de sistemas de criptografia em produção é de inteira responsabilidade do usuário.
           </p>
         </div>
       </div>
