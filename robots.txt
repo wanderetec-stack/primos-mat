@@ -1,3 +1,13 @@
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
 User-agent: *
 Allow: /
+
 Sitemap: https://primos.mat.br/sitemap.xml

@@ -1,16 +1,26 @@
 {
-  "name": "Primos.mat.br",
+  "name": "Primos.mat.br | Scanner de Primos",
   "short_name": "Primos",
   "start_url": "/index.html",
   "display": "standalone",
-  "background_color": "#000000",
+  "background_color": "#050505",
   "theme_color": "#00ff41",
-  "orientation": "portrait",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "description": "Scanner de Primalidade e Criptografia RSA de Alta Performance.",
+  "categories": ["education", "utilities", "productivity"],
   "icons": [
     {
       "src": "/vite.svg",
       "type": "image/svg+xml",
-      "sizes": "512x512"
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/vite.svg",
+      "type": "image/svg+xml",
+      "sizes": "512x512",
+      "purpose": "any maskable"
     }
   ]
 }
