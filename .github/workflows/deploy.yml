@@ -51,68 +51,68 @@ jobs:
           publish_dir: ./dist
           cname: primos.mat.br
 
-  deploy-vercel:
-    name: Deploy Vercel (Performance)
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+  # deploy-vercel:
+  #   name: Deploy Vercel (Performance)
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
 
-      - name: Download Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: dist
-          path: dist
+  #     - name: Download Artifact
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: dist
+  #         path: dist
 
-      - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v20
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          vercel-args: '--prod'
+  #     - name: Deploy to Vercel
+  #       uses: amondnet/vercel-action@v20
+  #       with:
+  #         vercel-token: ${{ secrets.VERCEL_TOKEN }}
+  #         vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+  #         vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+  #         vercel-args: '--prod'
 
-  deploy-cloudflare:
-    name: Deploy Cloudflare (Edge/WAF)
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      deployments: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+  # deploy-cloudflare:
+  #   name: Deploy Cloudflare (Edge/WAF)
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     contents: read
+  #     deployments: write
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
 
-      - name: Download Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: dist
-          path: dist
+  #     - name: Download Artifact
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: dist
+  #         path: dist
 
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: 'primos-mat'
-          directory: dist
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+  #     - name: Deploy to Cloudflare Pages
+  #       uses: cloudflare/pages-action@v1
+  #       with:
+  #         apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+  #         accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+  #         projectName: 'primos-mat'
+  #         directory: dist
+  #         gitHubToken: ${{ secrets.GITHUB_TOKEN }}
 
   notify-status:
     name: Telegram Notification
-    needs: [deploy-github, deploy-vercel, deploy-cloudflare]
+    needs: [deploy-github]
     runs-on: ubuntu-latest
     if: always()
     steps:
       - name: Check Status and Notify
         run: |
           STATUS="✅ SUCESSO"
-          if [ "${{ needs.deploy-github.result }}" != "success" ] || [ "${{ needs.deploy-vercel.result }}" != "success" ] || [ "${{ needs.deploy-cloudflare.result }}" != "success" ]; then
+          if [ "${{ needs.deploy-github.result }}" != "success" ]; then
             STATUS="⚠️ PARCIAL/ERRO"
           fi
           
           curl -s -X POST https://api.telegram.org/bot8205366262:AAEiaUGX8aZ7xjMwhEEdPIcJfBaBaFRQoxw/sendMessage \
           -d chat_id=7620121995 \
-          -d text="🚀 *DEPLOY REPORT - REDUNDANCY 3+*%0A%0ASTATUS: $STATUS%0A%0A- GITHUB PAGES: ${{ needs.deploy-github.result }}%0A- VERCEL: ${{ needs.deploy-vercel.result }}%0A- CLOUDFLARE: ${{ needs.deploy-cloudflare.result }}%0A%0A_Todos os sistemas sincronizados e protegidos._" \
+          -d text="🚀 *DEPLOY REPORT - REDUNDANCY (GH ONLY)*%0A%0ASTATUS: $STATUS%0A%0A- GITHUB PAGES: ${{ needs.deploy-github.result }}%0A- VERCEL: DISABLED%0A- CLOUDFLARE: DISABLED%0A%0A_Atenção: Redundância temporariamente desativada._" \
           -d parse_mode="Markdown"

@@ -27,17 +27,17 @@ FEATURES:
 
 [3] REDUNDANCY INFRASTRUCTURE (RULE OF 3+)
 --------------------------------------------------------------------------------
-STATUS: SYNCHRONIZED
+STATUS: PARTIALLY ACTIVE (User Decision: Manual Config Paused)
 MIRROR 1 (PRIMARY):    GitHub Pages  [ONLINE] -> primos.mat.br
-MIRROR 2 (PERFORMANCE): Vercel        [ONLINE] -> primos-mat.vercel.app
-MIRROR 3 (EDGE/WAF):   Cloudflare    [ONLINE] -> primos-mat.pages.dev
+MIRROR 2 (PERFORMANCE): Vercel        [PAUSED] -> Waiting Secrets
+MIRROR 3 (EDGE/WAF):   Cloudflare    [PAUSED] -> Waiting Secrets
 
 [4] DEPLOYMENT PIPELINE
 --------------------------------------------------------------------------------
 CI/CD: GitHub Actions
 WORKFLOWS:
-- deploy.yml: Build -> Deploy (All Mirrors) -> Notify Telegram
-- health-check.yml: Cron (09:00) -> Ping Mirrors -> Health Report
+- deploy.yml: Build -> Deploy (GitHub Only) -> Notify Telegram
+- health-check.yml: Cron (09:00) -> Ping (GitHub Only) -> Health Report
 
 ================================================================================
 SYSTEM INTEGRITY: 100%

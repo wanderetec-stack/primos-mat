@@ -14,8 +14,8 @@ jobs:
         run: |
           # Define targets
           URL_GITHUB="https://primos.mat.br"
-          URL_VERCEL="https://primos-mat.vercel.app" # Assuming Vercel subdomain, adjust if custom domain
-          URL_CLOUDFLARE="https://primos-mat.pages.dev" # Assuming Cloudflare subdomain
+          # URL_VERCEL="https://primos-mat.vercel.app"
+          # URL_CLOUDFLARE="https://primos-mat.pages.dev"
 
           # Function to check status
           check_status() {
@@ -27,22 +27,22 @@ jobs:
           }
 
           STATUS_GH=$(check_status "$URL_GITHUB")
-          STATUS_VERCEL=$(check_status "$URL_VERCEL")
-          STATUS_CF=$(check_status "$URL_CLOUDFLARE")
+          # STATUS_VERCEL=$(check_status "$URL_VERCEL")
+          # STATUS_CF=$(check_status "$URL_CLOUDFLARE")
 
           echo "GH=$STATUS_GH" >> $GITHUB_OUTPUT
-          echo "VERCEL=$STATUS_VERCEL" >> $GITHUB_OUTPUT
-          echo "CF=$STATUS_CF" >> $GITHUB_OUTPUT
+          echo "VERCEL=PAUSED" >> $GITHUB_OUTPUT
+          echo "CF=PAUSED" >> $GITHUB_OUTPUT
 
-          if [ "$STATUS_GH" == "ONLINE" ] && [ "$STATUS_VERCEL" == "ONLINE" ] && [ "$STATUS_CF" == "ONLINE" ]; then
-            echo "OVERALL=OPERATIONAL" >> $GITHUB_OUTPUT
+          if [ "$STATUS_GH" == "ONLINE" ]; then
+            echo "OVERALL=OPERATIONAL (GH ONLY)" >> $GITHUB_OUTPUT
           else
-            echo "OVERALL=DEGRADED" >> $GITHUB_OUTPUT
+            echo "OVERALL=DOWN" >> $GITHUB_OUTPUT
           fi
 
       - name: Telegram Notification
         run: |
           curl -s -X POST https://api.telegram.org/bot8205366262:AAEiaUGX8aZ7xjMwhEEdPIcJfBaBaFRQoxw/sendMessage \
           -d chat_id=7620121995 \
-          -d text="✅ *DAILY HEALTH CHECK (09:00)*%0A%0ASTATUS: ${{ steps.check.outputs.OVERALL }}%0A%0A- GITHUB PAGES: ${{ steps.check.outputs.GH }}%0A- VERCEL: ${{ steps.check.outputs.VERCEL }}%0A- CLOUDFLARE: ${{ steps.check.outputs.CF }}%0A%0ASYSTEM INTEGRITY: 100%25" \
+          -d text="✅ *DAILY HEALTH CHECK (09:00)*%0A%0ASTATUS: ${{ steps.check.outputs.OVERALL }}%0A%0A- GITHUB PAGES: ${{ steps.check.outputs.GH }}%0A- VERCEL: PAUSED%0A- CLOUDFLARE: PAUSED%0A%0ASYSTEM INTEGRITY: 100%25 (Active Node)" \
           -d parse_mode="Markdown"
