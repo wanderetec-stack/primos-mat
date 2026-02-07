@@ -44,13 +44,15 @@ const TeoriaNumerosArticle: React.FC = () => {
         <section className="mb-12 grid grid-cols-1 md:grid-cols-2 gap-6">
           <ArticleMedia 
             type="audio" 
-            title="Narração Completa do Artigo" 
+            title="Narração Neural (Pt-BR)" 
             duration="15:20" 
+            mediaUrl="/audio/teoria_numeros.mp3"
           />
           <ArticleMedia 
             type="video" 
-            title="A Beleza da Espiral de Ulam" 
-            duration="08:45" 
+            title="Vídeo Explicativo: Teoria dos Números" 
+            duration="01:30" 
+            mediaUrl="/video/teoria.mp4"
           />
         </section>
 

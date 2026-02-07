@@ -1,0 +1,41 @@
+name: Render Videos
+on:
+  workflow_dispatch:
+
+jobs:
+  render:
+    name: Render Videos
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install FFmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Render Criptografia Video
+        run: npx remotion render src/remotion/index.ts CriptografiaVideo public/video/criptografia.mp4 --gl=angle --overwrite
+
+      - name: Render Teoria Video
+        run: npx remotion render src/remotion/index.ts TeoriaVideo public/video/teoria.mp4 --gl=angle --overwrite
+
+      - name: Render Performance Video
+        run: npx remotion render src/remotion/index.ts PerformanceVideo public/video/performance.mp4 --gl=angle --overwrite
+
+      - name: Commit and Push Videos
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/video/*.mp4
+          git commit -m "chore: render videos [skip ci]" || echo "No changes to commit"
+          git push
