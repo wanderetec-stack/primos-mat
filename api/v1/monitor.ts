@@ -9,36 +9,55 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
-  const { type, ip, userAgent, path } = req.body || req.query;
+  const { type, ip, userAgent, path, title, duration, videoUrl } = req.body || req.query;
 
   let message = '';
+  const clientIP = ip || req.headers['x-forwarded-for'] || 'Unknown';
+  const ua = userAgent || req.headers['user-agent'] || 'Unknown';
 
   if (type === 'heartbeat') {
-    // Only log, maybe too noisy for Telegram if high traffic. 
-    // For now, we return 200 OK. 
-    // In a real app, we would store this in Redis/KV.
     return res.status(200).json({ status: 'alive', timestamp: Date.now() });
   } 
   
-  if (type === 'honeypot') {
-    message = `🚨 *SECURITY ALERT: HONEYPOT TRIGGERED* %0A%0A` +
-              `📍 Path: \`${path || 'Unknown'}\`%0A` +
-              `🕵️ IP: \`${ip || req.headers['x-forwarded-for'] || 'Unknown'}\`%0A` +
-              `🤖 User-Agent: \`${userAgent || req.headers['user-agent'] || 'Unknown'}\`%0A` +
-              `⚠️ Action: Potential Scanner/Bot detected.`;
-  } else if (type === 'alert') {
-    const { alertType, detail, count } = req.body || req.query;
-    message = `🛡️ *SECURITY SYSTEM ACTIVE* %0A%0A` +
-              `⚠️ Type: \`${alertType || 'General'}\`%0A` +
-              `📝 Detail: ${detail || 'No details'}%0A` +
-              `🔢 Count: ${count || 1}%0A` +
-              `🕵️ IP: \`${req.headers['x-forwarded-for'] || 'Unknown'}\``;
-  } else {
-    // Generic Visit
-    message = `👤 *NEW VISITOR DETECTED* %0A%0A` +
-              `📍 Page: \`${path || 'Home'}\`%0A` +
-              `🕵️ IP: \`${req.headers['x-forwarded-for'] || 'Unknown'}\`%0A` +
-              `🕒 Time: ${new Date().toISOString()}`;
+  switch (type) {
+    case 'video_published':
+      message = `🎬 *NOVO VÍDEO RENDERIZADO* %0A%0A` +
+                `📺 Título: \`${title || 'Vídeo Didático'}\`%0A` +
+                `⏱️ Duração: \`${duration || 'Unknown'}\`%0A` +
+                `🔗 Arquivo: \`${videoUrl || 'N/A'}\`%0A` +
+                `✅ Status: Enviado para Deploy`;
+      break;
+
+    case 'deploy_success':
+      message = `🚀 *DEPLOY CONCLUÍDO* %0A%0A` +
+                `✅ O site foi atualizado com sucesso.%0A` +
+                `🌐 URL: https://primos.mat.br%0A` +
+                `📅 Data: ${new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })}`;
+      break;
+
+    case 'honeypot':
+      message = `🚨 *ALERTA DE SEGURANÇA (HONEYPOT)* %0A%0A` +
+                `📍 Path: \`${path || 'Unknown'}\`%0A` +
+                `🕵️ IP: \`${clientIP}\`%0A` +
+                `🤖 User-Agent: \`${ua}\`%0A` +
+                `⚠️ Ação: Bloqueio Recomendado`;
+      break;
+
+    case 'alert':
+      const { alertType, detail, count } = req.body || req.query;
+      message = `🛡️ *AVISO DE SEGURANÇA* %0A%0A` +
+                `⚠️ Tipo: \`${alertType || 'General'}\`%0A` +
+                `📝 Detalhe: ${detail || 'No details'}%0A` +
+                `🔢 Ocorrências: ${count || 1}%0A` +
+                `🕵️ IP: \`${clientIP}\``;
+      break;
+
+    default: // Generic Visit
+      message = `👤 *NOVO VISITANTE* %0A%0A` +
+                `📍 Página: \`${path || 'Home'}\`%0A` +
+                `🕵️ IP: \`${clientIP}\`%0A` +
+                `🕒 Hora: ${new Date().toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo' })}`;
+      break;
   }
 
   try {

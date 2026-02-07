@@ -39,3 +39,10 @@ jobs:
           git add public/video/*.mp4
           git commit -m "chore: render videos" || echo "No changes to commit"
           git push
+
+      - name: Notify Telegram Video Published
+        if: success()
+        run: |
+          curl -s -X POST https://api.telegram.org/bot8205366262:AAEiaUGX8aZ7xjMwhEEdPIcJfBaBaFRQoxw/sendMessage \
+          -H 'Content-Type: application/json' \
+          -d '{"chat_id": "7620121995", "text": "🎬 *VÍDEO RENDERIZADO E PUBLICADO*\n\n📺 Título: `Vídeos Didáticos (Cripto/Teoria/Perf)`\n⏱️ Duração: `~90s cada`\n🔗 Status: `Commit realizado. Aguardando Deploy Automático.`", "parse_mode": "Markdown"}'
