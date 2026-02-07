@@ -1,4 +1,4 @@
-const CACHE_NAME = 'primos-mat-v2-pwa';
+const CACHE_NAME = 'primos-mat-v3-force-update';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -21,7 +21,9 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
-// Fetch Event: Network First for API, Stale-While-Revalidate for Assets
+// Fetch Event: 
+// - Network First for HTML (Navigations) and API
+// - Stale-While-Revalidate for JS/CSS/Images
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
@@ -31,7 +33,25 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Strategy for Static Assets: Stale-While-Revalidate
+  // Strategy for HTML/Navigation: Network First
+  // Forces the browser to check for new index.html content
+  if (event.request.mode === 'navigate' || url.pathname.endsWith('.html') || url.pathname === '/') {
+    event.respondWith(
+      fetch(event.request)
+        .then((networkResponse) => {
+          return caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, networkResponse.clone());
+            return networkResponse;
+          });
+        })
+        .catch(() => {
+          return caches.match(event.request);
+        })
+    );
+    return;
+  }
+
+  // Strategy for Static Assets (JS, CSS, Images): Stale-While-Revalidate
   // This ensures fast load (from cache) but updates in background
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {

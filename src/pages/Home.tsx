@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Scanner from '../components/Scanner';
 import { Database, Zap, Lock, Calendar } from 'lucide-react';
 import UlamSpiral from '../components/UlamSpiral';
@@ -72,26 +73,33 @@ const Home: React.FC = () => {
           { 
             icon: <Lock className="text-primary" size={24} />,
             title: "Criptografia", 
-            desc: "Fundamentação matemática para protocolos de segurança digital modernos." 
+            desc: "Fundamentação matemática para protocolos de segurança digital modernos.",
+            route: "/criptografia-rsa-seguranca"
           },
           { 
             icon: <Database className="text-primary" size={24} />,
             title: "Teoria dos Números", 
-            desc: "Exploração pura das propriedades dos inteiros e sua distribuição." 
+            desc: "Exploração pura das propriedades dos inteiros e sua distribuição.",
+            route: "/teoria-dos-numeros-primos"
           },
           { 
             icon: <Zap className="text-primary" size={24} />,
             title: "Performance", 
-            desc: "Algoritmos otimizados para processamento client-side instantâneo." 
+            desc: "Algoritmos otimizados para processamento client-side instantâneo.",
+            route: "/engenharia-performance-web"
           }
         ].map((item, i) => (
-          <div key={i} className="glass-panel p-8 rounded-xl hover:border-primary/30 transition-all duration-300 group hover:-translate-y-1">
+          <Link 
+            key={i} 
+            to={item.route}
+            className="glass-panel p-8 rounded-xl hover:border-primary/30 transition-all duration-300 group hover:-translate-y-1 block"
+          >
             <div className="mb-4 p-3 bg-primary/5 rounded-lg w-fit border border-primary/10 group-hover:border-primary/30 transition-colors">
               {item.icon}
             </div>
             <h3 className="text-white font-mono font-bold mb-3 text-lg group-hover:text-primary transition-colors">{item.title}</h3>
             <p className="text-sm text-gray-400 leading-relaxed">{item.desc}</p>
-          </div>
+          </Link>
         ))}
       </div>
 

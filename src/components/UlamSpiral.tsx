@@ -39,7 +39,7 @@ const UlamSpiral: React.FC = () => {
       
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
-      const stepSize = 4 + (scrollY * 0.01); // Zoom based on scroll
+      const stepSize = Math.max(4, 4 + (scrollY * 0.01)); // Prevent zero/negative step and zoom
       const maxSteps = Math.min(canvas.width, canvas.height) / stepSize * 2;
       
       let x = centerX;
@@ -51,7 +51,12 @@ const UlamSpiral: React.FC = () => {
 
       ctx.fillStyle = 'rgba(0, 255, 65, 0.15)'; // Primary color low opacity
 
-      for (let n = 1; n < maxSteps * maxSteps; n++) {
+      // Hard limit n to prevent main thread freeze on high-res screens
+      // 50,000 points is enough for visual effect
+      const MAX_POINTS = 20000; 
+      const limit = Math.min(maxSteps * maxSteps, MAX_POINTS);
+
+      for (let n = 1; n < limit; n++) {
         if (isPrime(n)) {
           // Dynamic size based on scroll
           const size = Math.max(1, stepSize * 0.4);
