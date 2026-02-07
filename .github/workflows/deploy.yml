@@ -45,11 +45,11 @@ jobs:
           vercel-args: '--prod'
 
       # SYSTEM 3: Cloudflare Pages (Edge Redundancy)
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }} # User must set this secret
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }} # User must set this secret
-          projectName: 'primos-mat'
-          directory: ./dist
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Deploy to Cloudflare Pages
+      #   uses: cloudflare/pages-action@v1
+      #   with:
+      #     apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }} # User must set this secret
+      #     accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }} # User must set this secret
+      #     projectName: 'primos-mat'
+      #     directory: ./dist
+      #     gitHubToken: ${{ secrets.GITHUB_TOKEN }}
