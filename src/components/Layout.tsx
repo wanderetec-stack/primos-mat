@@ -94,7 +94,7 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage = '' }) => {
               <span>PROTECTED BY MATHEMATICS</span>
             </div>
             <p className="text-xs text-muted max-w-xs text-center md:text-left">
-              © {new Date().getFullYear()} Primos.mat.br. Infraestrutura segura para análise numérica e criptográfica.
+              © {new Date().getFullYear()} Primos.mat.br. Desenvolvido e criado por Wander Santoss.
             </p>
           </div>
           
