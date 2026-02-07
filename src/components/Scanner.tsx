@@ -6,6 +6,7 @@ const Scanner: React.FC = () => {
   const [inputVal, setInputVal] = useState('');
   const [status, setStatus] = useState<'idle' | 'scanning' | 'prime' | 'composite'>('idle');
   const [resultMessage, setResultMessage] = useState('');
+  const [aiInsight, setAiInsight] = useState('');
   const [executionTime, setExecutionTime] = useState(0);
   const [resultData, setResultData] = useState<{number: string, isPrime: boolean, factors?: string[], time: number} | null>(null);
   
@@ -13,6 +14,28 @@ const Scanner: React.FC = () => {
   const [scanCount, setScanCount] = useState(0);
   const [lastScanTime, setLastScanTime] = useState(0);
   const { sendAlert } = useTelegram();
+
+  const getAIInsights = (n: bigint, isPrime: boolean): string => {
+    if (n === 2n) return "AI ANALYSIS: The only even prime number. The basis of all binary computation.";
+    if (n < 2n) return "AI ANALYSIS: Value too low. Primes are integers greater than 1.";
+    
+    const s = n.toString();
+    const isPalindrome = s === s.split('').reverse().join('');
+
+    if (isPrime) {
+       if (isPalindrome) return "AI ANALYSIS: PALINDROMIC PRIME DETECTED! Reads the same forwards and backwards.";
+       if (n > 1000000n) return "AI ANALYSIS: High-magnitude prime detected. Suitable for cryptographic key generation.";
+       if ((n - 1n) % 4n === 0n) return "AI ANALYSIS: Pythagorean Prime (4n + 1). Can be expressed as sum of two squares.";
+       return "AI ANALYSIS: Valid Prime Entity confirmed. Structure is indivisible.";
+    } else {
+       if (n % 2n === 0n) return "AI ANALYSIS: Even number detected. Trivially divisible by 2.";
+       if (n % 5n === 0n) return "AI ANALYSIS: Pattern ends in 0 or 5. Divisible by 5.";
+       const sum = s.split('').reduce((a, b) => a + parseInt(b), 0);
+       if (sum % 3 === 0) return `AI ANALYSIS: Digital root sum is ${sum}. Divisible by 3 via divisibility rule.`;
+       if (isPalindrome) return "AI ANALYSIS: Palindromic Composite. Symmetric but divisible.";
+       return "AI ANALYSIS: Composite structure. Decomposable into smaller prime factors.";
+    }
+  };
 
   const isPrime = (numStr: string): { isPrime: boolean; factors?: string[]; time: number } => {
     const start = performance.now();
@@ -50,6 +73,15 @@ const Scanner: React.FC = () => {
   const handleScan = () => {
     if (!inputVal) return;
 
+    // Smart Parsing: Extract first sequence of digits
+    const match = inputVal.match(/\d+/);
+    if (!match) {
+        setResultMessage("ERROR: NO NUMERIC DATA DETECTED IN INPUT.");
+        setStatus('composite');
+        return;
+    }
+    const targetNum = match[0];
+
     // Rate Limiting / Brute Force Detection
     const now = Date.now();
     if (now - lastScanTime < 1000) {
@@ -57,7 +89,7 @@ const Scanner: React.FC = () => {
       setScanCount(newCount);
       if (newCount >= 5) {
         // Trigger Security Alert
-        sendAlert('BRUTE_FORCE', `Rapid scanning detected on value: ${inputVal}`, newCount);
+        sendAlert('BRUTE_FORCE', `Rapid scanning detected on value: ${targetNum}`, newCount);
         setResultMessage("WARNING: ANOMALOUS ACTIVITY DETECTED. SYSTEM LOCKED.");
         setStatus('composite'); // Fail safely
         return;
@@ -69,14 +101,23 @@ const Scanner: React.FC = () => {
 
     setStatus('scanning');
     setResultMessage('');
+    setAiInsight('');
     
     // Simulate scanning delay for effect
     setTimeout(() => {
       try {
-        const { isPrime: prime, factors, time } = isPrime(inputVal);
+        const { isPrime: prime, factors, time } = isPrime(targetNum);
         setExecutionTime(time);
-        setResultData({ number: inputVal, isPrime: prime, factors, time });
+        setResultData({ number: targetNum, isPrime: prime, factors, time });
         
+        // Generate AI Insight
+        try {
+            const insight = getAIInsights(BigInt(targetNum), prime);
+            setAiInsight(insight);
+        } catch (e) {
+            setAiInsight("AI ANALYSIS: Calculation too complex for heuristic engine.");
+        }
+
         if (prime) {
           setStatus('prime');
           setResultMessage(`TARGET IDENTIFIED: PRIME ENTITY.`);
@@ -151,18 +192,18 @@ const Scanner: React.FC = () => {
           </div>
 
           {/* Input Area */}
-          <div className="relative mb-8 group/input">
+          <div className="relative mb-8 group/input flex flex-col md:block">
             <input 
               type="text" 
               value={inputVal}
-              onChange={(e) => setInputVal(e.target.value.replace(/[^0-9]/g, ''))}
-              placeholder="ENTER INTEGER SEQUENCE..."
-              className="w-full bg-black/50 border border-white/10 rounded-lg p-4 text-2xl font-mono text-white placeholder-gray-600 focus:outline-none focus:border-primary/50 focus:shadow-[0_0_20px_rgba(0,255,65,0.1)] transition-all text-center tracking-widest"
+              onChange={(e) => setInputVal(e.target.value)}
+              placeholder="ENTER INTEGER SEQUENCE OR QUERY..."
+              className="w-full bg-black/50 border border-white/10 rounded-lg p-4 text-xl md:text-2xl font-mono text-white placeholder-gray-600 focus:outline-none focus:border-primary/50 focus:shadow-[0_0_20px_rgba(0,255,65,0.1)] transition-all text-center tracking-widest md:pr-40"
             />
             <button 
               onClick={handleScan}
               disabled={status === 'scanning' || !inputVal}
-              className="absolute right-2 top-2 bottom-2 px-6 bg-primary text-black font-bold font-mono rounded hover:bg-white hover:shadow-[0_0_15px_rgba(255,255,255,0.5)] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              className="mt-4 md:mt-0 md:absolute md:right-2 md:top-2 md:bottom-2 w-full md:w-auto px-6 bg-primary text-black font-bold font-mono rounded hover:bg-white hover:shadow-[0_0_15px_rgba(255,255,255,0.5)] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 py-3 md:py-0"
             >
               {status === 'scanning' ? 'SCANNING...' : 'INITIATE'}
               {!status.includes('scan') && <Search size={16} />}
@@ -170,15 +211,24 @@ const Scanner: React.FC = () => {
           </div>
 
           {/* Results Display */}
-          {resultMessage && (
-            <div className={`p-4 rounded border font-mono text-sm mb-6 animate-fade-in ${
+          {(resultMessage || aiInsight) && (
+            <div className={`p-4 rounded border font-mono text-sm mb-6 animate-fade-in space-y-3 ${
               status === 'prime' ? 'bg-primary/10 border-primary/30 text-primary' : 
               status === 'composite' ? 'bg-red-500/10 border-red-500/30 text-red-400' : 'bg-gray-800 border-gray-700'
             }`}>
-              <div className="flex justify-between items-center">
-                 <span>{resultMessage}</span>
-                 {executionTime > 0 && <span className="text-xs opacity-70">T: {executionTime.toFixed(2)}ms</span>}
-              </div>
+              {resultMessage && (
+                <div className="flex justify-between items-center border-b border-white/10 pb-2 mb-2">
+                   <span className="font-bold">{resultMessage}</span>
+                   {executionTime > 0 && <span className="text-xs opacity-70">T: {executionTime.toFixed(2)}ms</span>}
+                </div>
+              )}
+              
+              {aiInsight && (
+                <div className="flex items-start gap-2 text-xs md:text-sm opacity-90">
+                   <Cpu size={14} className="mt-0.5 shrink-0" />
+                   <span>{aiInsight}</span>
+                </div>
+              )}
             </div>
           )}
 
