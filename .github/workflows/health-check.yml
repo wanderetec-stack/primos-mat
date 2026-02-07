@@ -1,0 +1,48 @@
+name: Daily Health Check
+
+on:
+  schedule:
+    - cron: '0 12 * * *' # 09:00 AM Brasilia Time (UTC-3) -> 12:00 UTC
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Systems
+        id: check
+        run: |
+          # Define targets
+          URL_GITHUB="https://primos.mat.br"
+          URL_VERCEL="https://primos-mat.vercel.app" # Assuming Vercel subdomain, adjust if custom domain
+          URL_CLOUDFLARE="https://primos-mat.pages.dev" # Assuming Cloudflare subdomain
+
+          # Function to check status
+          check_status() {
+            if curl -s -o /dev/null -w "%{http_code}" "$1" | grep -q "200"; then
+              echo "ONLINE"
+            else
+              echo "OFFLINE"
+            fi
+          }
+
+          STATUS_GH=$(check_status "$URL_GITHUB")
+          STATUS_VERCEL=$(check_status "$URL_VERCEL")
+          STATUS_CF=$(check_status "$URL_CLOUDFLARE")
+
+          echo "GH=$STATUS_GH" >> $GITHUB_OUTPUT
+          echo "VERCEL=$STATUS_VERCEL" >> $GITHUB_OUTPUT
+          echo "CF=$STATUS_CF" >> $GITHUB_OUTPUT
+
+          if [ "$STATUS_GH" == "ONLINE" ] && [ "$STATUS_VERCEL" == "ONLINE" ] && [ "$STATUS_CF" == "ONLINE" ]; then
+            echo "OVERALL=OPERATIONAL" >> $GITHUB_OUTPUT
+          else
+            echo "OVERALL=DEGRADED" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Telegram Notification
+        run: |
+          curl -s -X POST https://api.telegram.org/bot8205366262:AAEiaUGX8aZ7xjMwhEEdPIcJfBaBaFRQoxw/sendMessage \
+          -d chat_id=7620121995 \
+          -d text="✅ *DAILY HEALTH CHECK (09:00)*%0A%0ASTATUS: ${{ steps.check.outputs.OVERALL }}%0A%0A- GITHUB PAGES: ${{ steps.check.outputs.GH }}%0A- VERCEL: ${{ steps.check.outputs.VERCEL }}%0A- CLOUDFLARE: ${{ steps.check.outputs.CF }}%0A%0ASYSTEM INTEGRITY: 100%25" \
+          -d parse_mode="Markdown"

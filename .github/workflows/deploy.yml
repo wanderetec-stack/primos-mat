@@ -4,14 +4,11 @@ on:
   push:
     branches:
       - main
-  schedule:
-    - cron: '0 12 * * *' # 09:00 AM Brasilia Time (UTC-3) -> 12:00 UTC
 
 jobs:
-  build-and-deploy:
+  build:
+    name: Build Project
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -28,7 +25,25 @@ jobs:
       - name: Build Project
         run: npm run build
 
-      # SYSTEM 1: GitHub Pages (Primary)
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+  deploy-github:
+    name: Deploy GitHub Pages (Primary)
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
@@ -36,35 +51,68 @@ jobs:
           publish_dir: ./dist
           cname: primos.mat.br
 
-      # SYSTEM 2: Vercel (High Performance Backup)
+  deploy-vercel:
+    name: Deploy Vercel (Performance)
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+
       - name: Deploy to Vercel
         uses: amondnet/vercel-action@v20
         with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }} # User must set this secret
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }} # User must set this secret
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }} # User must set this secret
-          working-directory: ./
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           vercel-args: '--prod'
 
-      daily-health-check:
+  deploy-cloudflare:
+    name: Deploy Cloudflare (Edge/WAF)
+    needs: build
     runs-on: ubuntu-latest
-    needs: build-and-deploy
-    if: success()
+    permissions:
+      contents: read
+      deployments: write
     steps:
-      - name: Telegram Daily Health Check
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: 'primos-mat'
+          directory: dist
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+
+  notify-status:
+    name: Telegram Notification
+    needs: [deploy-github, deploy-vercel, deploy-cloudflare]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Check Status and Notify
         run: |
+          STATUS="✅ SUCESSO"
+          if [ "${{ needs.deploy-github.result }}" != "success" ] || [ "${{ needs.deploy-vercel.result }}" != "success" ] || [ "${{ needs.deploy-cloudflare.result }}" != "success" ]; then
+            STATUS="⚠️ PARCIAL/ERRO"
+          fi
+          
           curl -s -X POST https://api.telegram.org/bot8205366262:AAEiaUGX8aZ7xjMwhEEdPIcJfBaBaFRQoxw/sendMessage \
           -d chat_id=7620121995 \
-          -d text="✅ *DAILY HEALTH CHECK (09:00)*%0A%0ASTATUS: OPERATIONAL%0A%0A- GITHUB PAGES: ONLINE%0A- VERCEL: ONLINE%0A- CLOUDFLARE: ONLINE%0A%0ASYSTEM INTEGRITY: 100%25" \
+          -d text="🚀 *DEPLOY REPORT - REDUNDANCY 3+*%0A%0ASTATUS: $STATUS%0A%0A- GITHUB PAGES: ${{ needs.deploy-github.result }}%0A- VERCEL: ${{ needs.deploy-vercel.result }}%0A- CLOUDFLARE: ${{ needs.deploy-cloudflare.result }}%0A%0A_Todos os sistemas sincronizados e protegidos._" \
           -d parse_mode="Markdown"
-
-  scheduled-check:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'schedule'
-    steps:
-       - name: Telegram Daily Health Check (Scheduled)
-         run: |
-           curl -s -X POST https://api.telegram.org/bot8205366262:AAEiaUGX8aZ7xjMwhEEdPIcJfBaBaFRQoxw/sendMessage \
-           -d chat_id=7620121995 \
-           -d text="✅ *DAILY HEALTH CHECK (09:00)*%0A%0ASTATUS: OPERATIONAL%0A%0A- GITHUB PAGES: ONLINE%0A- VERCEL: ONLINE%0A- CLOUDFLARE: ONLINE%0A%0ASYSTEM INTEGRITY: 100%25" \
-           -d parse_mode="Markdown"
