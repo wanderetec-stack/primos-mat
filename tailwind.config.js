@@ -28,8 +28,13 @@ export default {
         'slide-up': 'slideUp 0.6s ease-out forwards',
         'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         'glitch': 'glitch 1s linear infinite',
+        'music-bar': 'musicBar 0.5s ease-in-out infinite alternate',
       },
       keyframes: {
+        musicBar: {
+          '0%': { height: '10%' },
+          '100%': { height: '100%' },
+        },
         scan: {
           '0%': { top: '0%', opacity: '0' },
           '10%': { opacity: '1' },
