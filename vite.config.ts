@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react'
 import { resolve, dirname } from 'path'
 import { fileURLToPath } from 'url'
 import obfuscatorPlugin from 'rollup-plugin-obfuscator';
+import viteCompression from 'vite-plugin-compression';
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -11,6 +12,18 @@ const __dirname = dirname(__filename)
 export default defineConfig({
   plugins: [
     react(),
+    viteCompression({
+      algorithm: 'brotliCompress',
+      ext: '.br',
+      threshold: 1024, // Compress files larger than 1kb
+      deleteOriginFile: false
+    }),
+    viteCompression({
+      algorithm: 'gzip',
+      ext: '.gz',
+      threshold: 1024,
+      deleteOriginFile: false
+    }),
     obfuscatorPlugin({
       global: true,
       options: {

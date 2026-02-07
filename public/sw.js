@@ -1,4 +1,4 @@
-const CACHE_NAME = 'primos-mat-v1';
+const CACHE_NAME = 'primos-mat-v2-pwa';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -10,22 +10,43 @@ const ASSETS_TO_CACHE = [
   '/manifest.json'
 ];
 
+// Install Event: Cache App Shell
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
+      console.log('Service Worker: Caching App Shell');
       return cache.addAll(ASSETS_TO_CACHE);
     })
   );
+  self.skipWaiting();
 });
 
+// Fetch Event: Network First for API, Stale-While-Revalidate for Assets
 self.addEventListener('fetch', (event) => {
+  const url = new URL(event.request.url);
+
+  // Strategy for API: Network Only (or Network First)
+  if (url.pathname.startsWith('/api/')) {
+    event.respondWith(fetch(event.request));
+    return;
+  }
+
+  // Strategy for Static Assets: Stale-While-Revalidate
+  // This ensures fast load (from cache) but updates in background
   event.respondWith(
-    caches.match(event.request).then((response) => {
-      return response || fetch(event.request);
+    caches.match(event.request).then((cachedResponse) => {
+      const fetchPromise = fetch(event.request).then((networkResponse) => {
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(event.request, networkResponse.clone());
+        });
+        return networkResponse;
+      });
+      return cachedResponse || fetchPromise;
     })
   );
 });
 
+// Activate Event: Cleanup Old Caches
 self.addEventListener('activate', (event) => {
   const cacheWhitelist = [CACHE_NAME];
   event.waitUntil(
@@ -33,10 +54,12 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
           if (cacheWhitelist.indexOf(cacheName) === -1) {
+            console.log('Service Worker: Clearing Old Cache');
             return caches.delete(cacheName);
           }
         })
       );
     })
   );
+  self.clients.claim();
 });
