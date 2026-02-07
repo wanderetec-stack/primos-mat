@@ -1,16 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import Scanner from '../components/Scanner';
-import { Database, Zap, Lock, Calendar } from 'lucide-react';
+import { Database, Zap, Lock } from 'lucide-react';
 import UlamSpiral from '../components/UlamSpiral';
-import { getDailyPrime } from '../utils/dailyPrime';
+import DailyPrime from '../components/DailyPrime';
 
 const Home: React.FC = () => {
-  const [dailyPrime, setDailyPrime] = useState<{number: number, title: string, desc: string} | null>(null);
-
-  useEffect(() => {
-    setDailyPrime(getDailyPrime());
-  }, []);
 
   return (
     <div className="flex flex-col gap-20 py-12 relative">
@@ -42,30 +37,7 @@ const Home: React.FC = () => {
       </div>
 
       {/* Daily Prime Section */}
-      {dailyPrime && (
-        <div className="max-w-4xl mx-auto w-full animate-slide-up [animation-delay:500ms] relative z-20">
-          <div className="glass-panel p-8 rounded-xl border-l-4 border-l-primary relative overflow-hidden group">
-            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-               <Calendar size={120} />
-            </div>
-            <div className="relative z-10 flex flex-col md:flex-row gap-6 items-center md:items-start text-center md:text-left">
-              <div className="flex flex-col items-center justify-center bg-primary/10 rounded-lg p-6 min-w-[120px] border border-primary/20">
-                <span className="text-xs font-mono text-primary mb-1">DAILY PRIME</span>
-                <span className="text-4xl font-bold text-white font-mono">{dailyPrime.number}</span>
-              </div>
-              <div className="space-y-2">
-                <h3 className="text-xl font-bold text-white font-mono flex items-center justify-center md:justify-start gap-2">
-                  {dailyPrime.title}
-                  <span className="px-2 py-0.5 rounded text-[10px] bg-primary/20 text-primary border border-primary/20">TODAY</span>
-                </h3>
-                <p className="text-gray-400 text-sm leading-relaxed max-w-xl">
-                  {dailyPrime.desc}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <DailyPrime />
 
       {/* Features Grid */}
       <div className="grid md:grid-cols-3 gap-6 mt-12 animate-slide-up [animation-delay:600ms]">
