@@ -11,7 +11,7 @@ const Home: React.FC = () => {
         
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/20 bg-primary/5 text-primary text-xs font-mono mb-4 animate-fade-in">
           <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-          SYSTEM ONLINE // V1.0.4
+          SYSTEM ONLINE // V1.0.5
         </div>
 
         <h1 className="text-5xl md:text-7xl font-bold font-mono tracking-tighter text-white animate-slide-up relative z-10">
