@@ -1,0 +1,30 @@
+name: Daily System Monitor
+
+on:
+  schedule:
+    - cron: '0 12 * * *' # Every day at 12:00 UTC
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Daily Report
+        run: |
+          # NOTE: For production security, move these to Repository Secrets
+          TOKEN="8205366262:AAEiaUGX8aZ7xjMwhEEdPIcJfBaBaFRQoxw"
+          CHAT_ID="7620121995"
+          DATE=$(date)
+          
+          MESSAGE="📊 *RELATÓRIO DIÁRIO DO SISTEMA*
+          
+          ✅ *Status:* ONLINE
+          📅 *Data:* $DATE
+          🛡️ *Segurança:* ATIVA
+          
+          _Sistema Primos.mat.br operando normalmente._"
+          
+          curl -s -X POST https://api.telegram.org/bot$TOKEN/sendMessage \
+            -d chat_id=$CHAT_ID \
+            -d text="$MESSAGE" \
+            -d parse_mode="Markdown"

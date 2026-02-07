@@ -1,0 +1,55 @@
+name: Multi-Cloud Deploy (Redundancy 3+)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Project
+        run: npm run build
+
+      # SYSTEM 1: GitHub Pages (Primary)
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          cname: primos.mat.br
+
+      # SYSTEM 2: Vercel (High Performance Backup)
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v20
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }} # User must set this secret
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }} # User must set this secret
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }} # User must set this secret
+          working-directory: ./
+          vercel-args: '--prod'
+
+      # SYSTEM 3: Cloudflare Pages (Edge Redundancy)
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }} # User must set this secret
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }} # User must set this secret
+          projectName: 'primos-mat'
+          directory: ./dist
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
