@@ -1,4 +1,4 @@
-const CACHE_NAME = 'primos-mat-v3-force-update';
+const CACHE_NAME = 'primos-mat-v4-ai-scanner';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
