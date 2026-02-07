@@ -14,12 +14,19 @@
         "url": "https://primos.mat.br/privacidade.html"
       }
     </script>
-    <script type="module" crossorigin src="./assets/privacidade-bby0wXvl.js"></script>
-    <link rel="modulepreload" crossorigin href="./assets/Layout-3fHCaQRc.js">
+    <script type="module" crossorigin src="./assets/privacidade-aSokXmKM.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/Layout-B81mMGju.js">
     <link rel="stylesheet" crossorigin href="./assets/Layout-CffFnoWr.css">
   </head>
   <body>
     <div id="root"></div>
     <script src="./cookies.js"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js');
+        });
+      }
+    </script>
   </body>
 </html>

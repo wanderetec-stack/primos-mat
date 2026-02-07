@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="./vite.svg" />
+    <link rel="manifest" href="./manifest.json" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PRIMOS.MAT.BR | High Performance Math</title>
     <meta name="description" content="Scanner de Primalidade em Tempo Real e Infraestrutura de Alta Performance para Matemática Computacional. Segurança, Criptografia e Teoria dos Números." />
@@ -20,12 +21,19 @@
         "description": "Infraestrutura digital de alta precisão para exploração matemática e criptografia."
       }
     </script>
-    <script type="module" crossorigin src="./assets/main-DuCkso_W.js"></script>
-    <link rel="modulepreload" crossorigin href="./assets/Layout-3fHCaQRc.js">
+    <script type="module" crossorigin src="./assets/main-CSavY4aG.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/Layout-B81mMGju.js">
     <link rel="stylesheet" crossorigin href="./assets/Layout-CffFnoWr.css">
   </head>
   <body>
     <div id="root"></div>
     <script src="./cookies.js"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js');
+        });
+      }
+    </script>
   </body>
 </html>

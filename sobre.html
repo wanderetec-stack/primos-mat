@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="./vite.svg" />
+    <link rel="manifest" href="./manifest.json" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sobre - PRIMOS.MAT.BR</title>
     <meta name="description" content="Saiba mais sobre o Projeto Primos.mat.br: Uma iniciativa de infraestrutura matemática e educacional focada em Teoria dos Números e Criptografia." />
@@ -15,12 +16,19 @@
         "description": "Iniciativa acadêmica e tecnológica para o estudo de números primos e segurança digital."
       }
     </script>
-    <script type="module" crossorigin src="./assets/sobre-D3fQ6lf0.js"></script>
-    <link rel="modulepreload" crossorigin href="./assets/Layout-3fHCaQRc.js">
+    <script type="module" crossorigin src="./assets/sobre-CTwzr-jU.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/Layout-B81mMGju.js">
     <link rel="stylesheet" crossorigin href="./assets/Layout-CffFnoWr.css">
   </head>
   <body>
     <div id="root"></div>
     <script src="./cookies.js"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js');
+        });
+      }
+    </script>
   </body>
 </html>

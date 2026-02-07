@@ -1,0 +1,16 @@
+{
+  "name": "Primos.mat.br",
+  "short_name": "Primos",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#00ff41",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/vite.svg",
+      "type": "image/svg+xml",
+      "sizes": "512x512"
+    }
+  ]
+}
