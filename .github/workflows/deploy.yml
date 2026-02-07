@@ -32,7 +32,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
-          # cname: primos.mat.br (Desativado temporariamente para validação)
+          cname: primos.mat.br
 
       # SYSTEM 2: Vercel (High Performance Backup)
       - name: Deploy to Vercel
