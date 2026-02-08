@@ -1,5 +1,9 @@
 name: Render Videos
 on:
+  push:
+    paths:
+      - 'src/remotion/**'
+      - 'public/audio/**'
   workflow_dispatch:
 
 jobs:
