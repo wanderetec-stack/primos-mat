@@ -1,5 +1,13 @@
 import { Composition, staticFile } from 'remotion';
-import { DidacticVideo, DidacticVideoProps } from './DidacticVideo';
+import { DidacticVideo } from './DidacticVideo';
+import { z } from 'zod';
+
+const didacticSchema = z.object({
+  title: z.string(),
+  subtitle: z.string(),
+  audioSrc: z.string(),
+  sceneType: z.enum(['cripto', 'teoria', 'performance']),
+});
 
 export const RemotionRoot: React.FC = () => {
   const FPS = 30;
@@ -8,9 +16,10 @@ export const RemotionRoot: React.FC = () => {
 
   return (
     <>
-      <Composition<DidacticVideoProps, any>
+      <Composition
         id="CriptografiaVideo"
         component={DidacticVideo}
+        schema={didacticSchema}
         durationInFrames={FRAMES}
         fps={FPS}
         width={1280} // 720p for faster render
@@ -22,9 +31,10 @@ export const RemotionRoot: React.FC = () => {
           sceneType: 'cripto',
         }}
       />
-      <Composition<DidacticVideoProps, any>
+      <Composition
         id="TeoriaVideo"
         component={DidacticVideo}
+        schema={didacticSchema}
         durationInFrames={FRAMES}
         fps={FPS}
         width={1280}
@@ -36,9 +46,10 @@ export const RemotionRoot: React.FC = () => {
           sceneType: 'teoria',
         }}
       />
-      <Composition<DidacticVideoProps, any>
+      <Composition
         id="PerformanceVideo"
         component={DidacticVideo}
+        schema={didacticSchema}
         durationInFrames={FRAMES}
         fps={FPS}
         width={1280}
