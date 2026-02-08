@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Calendar, Share2, Brain, ChevronRight, ChevronLeft, BookOpen, X, Check, AlertCircle } from 'lucide-react';
+import { Calendar, Share2, Brain, ChevronRight, ChevronLeft, BookOpen, X, Check, AlertCircle, Activity, Info, Zap } from 'lucide-react';
 import { getDailyPrime, DailyPrimeData } from '../utils/dailyPrime';
 
 const DailyPrime: React.FC = () => {
   const [offset, setOffset] = useState(0);
   const [data, setData] = useState<DailyPrimeData | null>(null);
   const [quizOpen, setQuizOpen] = useState(false);
+  const [articleOpen, setArticleOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [showResult, setShowResult] = useState(false);
 
   useEffect(() => {
     setData(getDailyPrime(offset));
-    // Reset quiz state when changing days
+    // Reset states when changing days
     setQuizOpen(false);
+    setArticleOpen(false);
     setSelectedOption(null);
     setShowResult(false);
   }, [offset]);
@@ -110,15 +111,13 @@ const DailyPrime: React.FC = () => {
 
             {/* Action Buttons */}
             <div className="flex flex-wrap gap-3 justify-center md:justify-start pt-2">
-              {data.articleLink && (
-                <Link 
-                  to={data.articleLink}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-black font-bold hover:bg-primary-dark transition-all shadow hover:shadow-[0_0_15px_rgba(0,255,127,0.4)]"
-                >
-                  <BookOpen size={18} />
-                  Ler Artigo Completo
-                </Link>
-              )}
+              <button 
+                onClick={() => setArticleOpen(true)}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-black font-bold hover:bg-primary-dark transition-all shadow hover:shadow-[0_0_15px_rgba(0,255,127,0.4)]"
+              >
+                <BookOpen size={18} />
+                Ler Artigo Completo
+              </button>
               
               {data.quiz && (
                 <button 
@@ -223,13 +222,107 @@ const DailyPrime: React.FC = () => {
             )}
             
             {showResult && (
-               <button
+              <button
                 onClick={() => setQuizOpen(false)}
                 className="w-full py-3 rounded-lg bg-white/10 text-white font-bold hover:bg-white/20 transition-all mt-2"
               >
                 Fechar
               </button>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Article Modal - Updated Content */}
+      {articleOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-gray-900 border border-white/10 rounded-2xl p-6 max-w-2xl w-full shadow-2xl relative animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
+            <button 
+              onClick={() => setArticleOpen(false)}
+              className="absolute top-4 right-4 text-gray-500 hover:text-white"
+            >
+              <X size={20} />
+            </button>
+
+            <div className="mb-6 border-b border-white/10 pb-4">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                  <Info size={20} />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-white">Sobre o Card & O Número</h3>
+                  <p className="text-gray-400 font-mono text-sm">Explicação Detalhada do Daily Prime</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-6 text-gray-300 leading-relaxed">
+              
+              {/* Seção 1: O Que o Card Faz */}
+              <div className="bg-blue-500/5 p-5 rounded-xl border border-blue-500/10">
+                <h4 className="text-blue-400 font-bold mb-3 flex items-center gap-2 text-lg">
+                  <Zap size={18} /> O Que Este Card Faz?
+                </h4>
+                <p className="mb-2">
+                  Este é o <strong>Daily Prime Card</strong> (Card do Primo do Dia). Sua função é apresentar, a cada 24 horas, uma "Entidade Prima" diferente para estudo e apreciação.
+                </p>
+                <ul className="list-disc pl-5 space-y-1 text-gray-400 text-sm">
+                  <li><strong>Curadoria Diária:</strong> Selecionamos números com propriedades matemáticas únicas.</li>
+                  <li><strong>Navegação Temporal:</strong> Use as setas (Anterior/Próximo) para viajar no tempo e ver os primos de dias passados.</li>
+                  <li><strong>Desafio Interativo:</strong> O botão "Quiz Rápido" testa se você entendeu a propriedade especial do número.</li>
+                  <li><strong>Compartilhamento:</strong> O botão de share permite enviar essa descoberta para amigos.</li>
+                </ul>
+              </div>
+
+              {/* Seção 2: O Conceito do Número Específico */}
+              <div>
+                <h4 className="text-primary font-bold mb-3 flex items-center gap-2 text-lg">
+                  <Activity size={18} /> O Conceito do Número {data.number}
+                </h4>
+                <div className="bg-white/5 p-4 rounded-lg border border-white/10 mb-4">
+                  <p className="text-white italic mb-2">"{data.desc}"</p>
+                  <p className="text-sm text-gray-400">
+                    O número <strong>{data.number}</strong> não é apenas um número ímpar (ou par, no caso do 2). Ele é um <strong>{data.title}</strong>.
+                  </p>
+                </div>
+                
+                <p>
+                  Na matemática, este número é especial porque:
+                  {data.number === 2 ? (
+                    " Ele quebra o padrão. Todos os outros primos são ímpares. O 2 é o único par, tornando-se a base fundamental da lógica binária dos computadores."
+                  ) : (
+                    " Ele representa uma classe de primos que possuem propriedades além da simples indivisibilidade, sendo crucial para teorias avançadas e criptografia."
+                  )}
+                </p>
+              </div>
+
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-white/5">
+                <h4 className="text-white font-bold mb-2 text-sm uppercase tracking-wider">Resumo Técnico</h4>
+                <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+                  <li className="flex justify-between border-b border-white/5 pb-1">
+                    <span>Entidade:</span> <span className="text-primary font-mono font-bold">{data.number}</span>
+                  </li>
+                  <li className="flex justify-between border-b border-white/5 pb-1">
+                    <span>Categoria:</span> <span className="text-white">{data.title}</span>
+                  </li>
+                  <li className="flex justify-between border-b border-white/5 pb-1">
+                    <span>Função:</span> <span className="text-white">Primo Racional</span>
+                  </li>
+                  <li className="flex justify-between border-b border-white/5 pb-1">
+                    <span>Status:</span> <span className="text-green-400 font-bold">Verificado & Validado</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="mt-8 flex justify-end">
+              <button 
+                onClick={() => setArticleOpen(false)}
+                className="px-6 py-2 rounded-lg bg-white/10 text-white font-bold hover:bg-white/20 transition-colors border border-white/5"
+              >
+                Entendi, Fechar
+              </button>
+            </div>
           </div>
         </div>
       )}
