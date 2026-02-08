@@ -1,4 +1,4 @@
-const CACHE_NAME = 'primos-mat-v5-videos-fix';
+const CACHE_NAME = 'primos-mat-v6-force-update';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
