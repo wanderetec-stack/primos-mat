@@ -12,6 +12,7 @@ const __dirname = dirname(__filename)
 export default defineConfig({
   plugins: [
     react(),
+    /*
     viteCompression({
       algorithm: 'brotliCompress',
       ext: '.br',
@@ -24,6 +25,7 @@ export default defineConfig({
       threshold: 1024,
       deleteOriginFile: false
     }),
+    */
     obfuscatorPlugin({
       global: true,
       options: {
