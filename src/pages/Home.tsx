@@ -4,6 +4,7 @@ import Scanner from '../components/Scanner';
 import { Database, Zap, Lock } from 'lucide-react';
 import UlamSpiral from '../components/UlamSpiral';
 import DailyPrime from '../components/DailyPrime';
+import TelemetryMonitor from '../components/TelemetryMonitor';
 
 const Home: React.FC = () => {
 
@@ -76,21 +77,7 @@ const Home: React.FC = () => {
       </div>
 
       {/* Stats / Info Strip */}
-      <div className="border-y border-white/5 py-12 mt-12 bg-black/20 backdrop-blur-sm animate-fade-in">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          {[
-            { label: "UPTIME", value: "99.9%" },
-            { label: "LATENCY", value: "<50ms" },
-            { label: "ENCRYPTION", value: "AES-256" },
-            { label: "STATUS", value: "SECURE" }
-          ].map((stat, i) => (
-            <div key={i} className="flex flex-col gap-1">
-              <span className="text-3xl font-mono font-bold text-white">{stat.value}</span>
-              <span className="text-xs text-primary/60 font-mono tracking-widest">{stat.label}</span>
-            </div>
-          ))}
-        </div>
-      </div>
+      <TelemetryMonitor />
     </div>
   );
 };

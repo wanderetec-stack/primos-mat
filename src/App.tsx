@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import CriptografiaArticle from './pages/CriptografiaArticle';
 import TeoriaNumerosArticle from './pages/TeoriaNumerosArticle';
 import PerformanceArticle from './pages/PerformanceArticle';
+import TelemetriaArticle from './pages/TelemetriaArticle';
 
 // Wrapper component to access useLocation hook
 const AppContent: React.FC = () => {
@@ -18,6 +19,7 @@ const AppContent: React.FC = () => {
         <Route path="/criptografia-rsa-seguranca" element={<CriptografiaArticle />} />
         <Route path="/teoria-dos-numeros-primos" element={<TeoriaNumerosArticle />} />
         <Route path="/engenharia-performance-web" element={<PerformanceArticle />} />
+        <Route path="/telemetria-sistema" element={<TelemetriaArticle />} />
       </Routes>
     </Layout>
   );

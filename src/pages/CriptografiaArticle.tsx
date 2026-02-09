@@ -41,18 +41,12 @@ const CriptografiaArticle: React.FC = () => {
         </header>
 
         {/* Media Section */}
-        <section className="mb-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <section className="mb-12">
           <ArticleMedia 
             type="audio" 
             title="Narração Neural (Pt-BR)" 
             duration="12:45" 
             mediaUrl="/audio/criptografia.mp3"
-          />
-          <ArticleMedia 
-            type="video" 
-            title="Vídeo Explicativo: Criptografia RSA" 
-            duration="01:30" 
-            mediaUrl="/video/criptografia.mp4"
           />
         </section>
 

@@ -42,18 +42,12 @@ const PerformanceArticle: React.FC = () => {
         </header>
 
         {/* Media Section - AI Generated Content */}
-        <section className="mb-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <section className="mb-12">
           <ArticleMedia 
             type="audio" 
             title="Narração Neural (Pt-BR)" 
             duration="18:30" 
             mediaUrl="/audio/performance.mp3"
-          />
-          <ArticleMedia 
-            type="video" 
-            title="Visualizando Big O na Prática" 
-            duration="10:15" 
-            mediaUrl="/video/performance.mp4"
           />
         </section>
 

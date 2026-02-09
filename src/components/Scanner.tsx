@@ -140,7 +140,7 @@ const Scanner: React.FC = () => {
       if (newCount >= 5) {
         // Trigger Security Alert
         sendAlert('BRUTE_FORCE', `Rapid scanning detected on value: ${targetNum}`, newCount);
-        setResultMessage("WARNING: ANOMALOUS ACTIVITY DETECTED. SYSTEM LOCKED.");
+        setResultMessage("AVISO: ATIVIDADE ANÔMALA DETECTADA. SISTEMA BLOQUEADO.");
         setStatus('composite'); // Fail safely
         return;
       }
@@ -165,7 +165,7 @@ const Scanner: React.FC = () => {
           time: result.time
       });
       setAiInsight(insight);
-      setResultMessage(result.isPrime ? "PRIME ENTITY CONFIRMED" : "COMPOSITE ENTITY DETECTED");
+      setResultMessage(result.isPrime ? "ENTIDADE PRIMA CONFIRMADA" : "ENTIDADE COMPOSTA DETECTADA");
       setStatus(result.isPrime ? 'prime' : 'composite');
       setExecutionTime(result.time);
     }, 800);
@@ -211,7 +211,7 @@ const Scanner: React.FC = () => {
                 {/* AI Badge inside input */}
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1 pointer-events-none">
                     <Brain size={14} className="text-purple-500/50" />
-                    <span className="text-[10px] text-gray-500 font-mono hidden sm:inline">AI READY</span>
+                    <span className="text-[10px] text-gray-500 font-mono hidden sm:inline">IA PRONTA</span>
                 </div>
             </div>
             
@@ -223,11 +223,11 @@ const Scanner: React.FC = () => {
             {status === 'scanning' ? (
                 <>
                 <Cpu size={20} className="animate-spin" />
-                SCANNING...
+                ANALISANDO...
                 </>
             ) : (
                 <>
-                INITIATE SCAN
+                INICIAR ANÁLISE
                 </>
             )}
             </button>
@@ -249,11 +249,11 @@ const Scanner: React.FC = () => {
                     status === 'prime' ? 'text-primary' :
                     'text-red-400'
                 }`}>
-                    {status === 'scanning' ? 'ANALYZING...' : resultMessage}
+                    {status === 'scanning' ? 'PROCESSANDO...' : resultMessage}
                 </h3>
                 {executionTime > 0 && (
                     <p className="text-xs text-gray-500 font-mono">
-                        Execution Time: {executionTime.toFixed(2)}ms
+                        Tempo de Execução: {executionTime.toFixed(2)}ms
                     </p>
                 )}
             </div>
@@ -295,7 +295,7 @@ const Scanner: React.FC = () => {
           {/* Factors Display for Composite */}
           {status === 'composite' && resultData?.factors && (
             <div className="mt-4 p-3 bg-black/30 rounded border border-white/5">
-                <p className="text-sm text-gray-400 mb-2">Prime Factors Found:</p>
+                <p className="text-sm text-gray-400 mb-2">Fatores Primos Encontrados:</p>
                 <div className="flex flex-wrap gap-2">
                     {resultData.factors.map((factor, idx) => (
                         <span key={idx} className="px-2 py-1 bg-white/5 rounded text-xs font-mono text-red-300 border border-red-500/20">
