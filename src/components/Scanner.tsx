@@ -21,16 +21,16 @@ const Scanner: React.FC = () => {
   const [lastScanTime, setLastScanTime] = useState(0);
   const { sendAlert } = useTelegram();
 
-  const getAIInsights = (n: bigint, isPrime: boolean): AIInsightData => {
+  const getAIInsights = (n: bigint, isPrime: boolean, factors?: string[]): AIInsightData => {
     if (n === 2n) return {
       message: "AI CORE: O único número primo par. A base de toda computação binária.",
       explanation: "O número 2 é divisível apenas por 1 e por ele mesmo. É o único par com essa propriedade.",
-      formula: "2 ÷ 1 = 2, 2 ÷ 2 = 1"
+      formula: "n = 2 ⇒ P(n) = True"
     };
     if (n < 2n) return {
       message: "AI CORE: Valor muito baixo. Primos devem ser maiores que 1.",
       explanation: "Por definição, números primos são inteiros positivos maiores que 1.",
-      formula: "n > 1"
+      formula: "n < 2 ⇒ P(n) = False"
     };
     
     const s = n.toString();
@@ -40,49 +40,49 @@ const Scanner: React.FC = () => {
        if (isPalindrome) return {
          message: "AI CORE: PRIMO PALÍNDROMO DETECTADO! Lê-se da mesma forma em ambos os sentidos.",
          explanation: "Este número possui simetria perfeita em sua representação decimal, além de ser indivisível.",
-         formula: `${s} ↔ ${s.split('').reverse().join('')}`
+         formula: "P(n) ∧ Reverse(n) = n"
        };
        if (n > 1000000n) return {
          message: "AI CORE: Primo de alta magnitude detectado. Adequado para geração de chaves criptográficas.",
          explanation: "Números primos grandes são essenciais para algoritmos como RSA, pois sua fatoração é computacionalmente inviável.",
-         formula: "P > 10⁶"
+         formula: "n > 10⁶ ∧ P(n)"
        };
        if ((n - 1n) % 4n === 0n) return {
          message: "AI CORE: Primo Pitagórico (4n + 1). Pode ser expresso como a soma de dois quadrados.",
          explanation: "Teorema de Fermat sobre a soma de dois quadrados: primos da forma 4n+1 podem ser escritos como a² + b².",
-         formula: `${n} = a² + b²`
+         formula: "n ≡ 1 (mod 4) ⇒ n = a² + b²"
        };
        return {
          message: "AI CORE: Entidade Prima Válida confirmada. Estrutura indivisível.",
          explanation: "O número não possui divisores além de 1 e ele mesmo.",
-         formula: `${n} ÷ x ≠ inteiro`
+         formula: "∀d ∈ {2..√n}, n mod d ≠ 0"
        };
     } else {
        if (n % 2n === 0n) return {
          message: "AI CORE: Número par detectado. Trivialmente divisível por 2.",
          explanation: "Todo número par maior que 2 é composto, pois pode ser dividido por 2.",
-         formula: `${n} ÷ 2 = ${(n / 2n).toString()}`
+         formula: "n ≡ 0 (mod 2)"
        };
        if (n % 5n === 0n) return {
          message: "AI CORE: Padrão terminado em 0 ou 5. Divisível por 5.",
          explanation: "Qualquer número que termina em 0 ou 5 é múltiplo de 5.",
-         formula: `${n} ÷ 5 = ${(n / 5n).toString()}`
+         formula: "n ≡ 0 (mod 5)"
        };
        const sum = s.split('').reduce((a, b) => a + parseInt(b), 0);
        if (sum % 3 === 0) return {
          message: `AI CORE: Soma digital é ${sum}. Divisível por 3 pela regra de divisibilidade.`,
          explanation: `A soma dos algarismos (${s.split('').join('+')}) resulta em ${sum}, que é divisível por 3. Logo, ${n} também é.`,
-         formula: `${n} ÷ 3 = ${(n / 3n).toString()}`
+         formula: `Σ digits = ${sum} ⇒ ${sum} ≡ 0 (mod 3)`
        };
        if (isPalindrome) return {
          message: "AI CORE: Composto Palíndromo. Simétrico mas divisível.",
          explanation: "Apesar de sua simetria visual, o número possui divisores.",
-         formula: "Composto Simétrico"
+         formula: `n = Reverse(n) ∧ ∃d: n mod d = 0`
        };
        return {
          message: "AI CORE: Estrutura composta. Decomponível em fatores menores.",
          explanation: "O número possui divisores além de 1 e ele mesmo, o que o desqualifica como primo.",
-         formula: "Possui fatores"
+         formula: factors && factors.length >= 2 ? `${n} = ${factors[0]} × ${factors[1]}` : "n = a × b"
        };
     }
   };
@@ -156,7 +156,7 @@ const Scanner: React.FC = () => {
     // Simulate slight delay for "Scanner Effect"
     setTimeout(() => {
       const result = isPrime(targetNum);
-      const insight = getAIInsights(BigInt(targetNum), result.isPrime);
+      const insight = getAIInsights(BigInt(targetNum), result.isPrime, result.factors);
       
       setResultData({
           number: targetNum,
