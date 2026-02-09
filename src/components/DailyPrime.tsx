@@ -26,7 +26,7 @@ const DailyPrime: React.FC = () => {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: `Daily Prime: ${data.number}`,
+          title: `Primo do Dia: ${data.number}`,
           text: text,
           url: 'https://primos.mat.br'
         });
@@ -86,7 +86,7 @@ const DailyPrime: React.FC = () => {
           
           {/* Number Display with Animation */}
           <div className="flex flex-col items-center justify-center bg-black/40 backdrop-blur-md rounded-2xl p-8 min-w-[160px] border border-primary/20 shadow-inner group-hover:border-primary/40 transition-colors">
-            <span className="text-xs font-mono text-primary mb-2 tracking-widest">PRIME ENTITY</span>
+            <span className="text-xs font-mono text-primary mb-2 tracking-widest">ENTIDADE PRIMA</span>
             <span className="text-6xl font-bold text-white font-mono tracking-tighter animate-pulse-slow shadow-primary drop-shadow-[0_0_10px_rgba(0,255,127,0.5)]">
               {data.number}
             </span>

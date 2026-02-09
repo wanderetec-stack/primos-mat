@@ -185,7 +185,7 @@ const Scanner: React.FC = () => {
                 SCANNER DE PRIMALIDADE
                 <span className="text-[10px] bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded border border-purple-500/30 flex items-center gap-1">
                   <Sparkles size={10} />
-                  v3.0 AI-CORE
+                  v3.2 PT-BR
                 </span>
             </h2>
             <p className="text-xs text-gray-500 font-mono tracking-widest uppercase">Motor de Análise Heurística Quântica</p>
@@ -284,9 +284,15 @@ const Scanner: React.FC = () => {
 
                {/* Mathematical Formula/Proof */}
                {aiInsight.formula && (
-                 <div className="mt-2 bg-black/40 rounded p-2 pl-3 border-l-2 border-blue-500/50 font-mono text-xs text-blue-300 flex items-center gap-2">
-                   <span className="opacity-50">Lógica:</span>
-                   {aiInsight.formula}
+                 <div className="mt-3 bg-black/40 rounded p-3 border border-blue-500/20 relative overflow-hidden group">
+                   <div className="absolute top-0 left-0 w-1 h-full bg-blue-500/50"></div>
+                   <p className="text-[10px] text-blue-400 font-mono mb-1 uppercase tracking-wider flex items-center gap-1">
+                     <Sparkles size={10} />
+                     Fórmula Matemática
+                   </p>
+                   <code className="font-mono text-sm text-blue-200 block">
+                     {aiInsight.formula}
+                   </code>
                  </div>
                )}
             </div>
