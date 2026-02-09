@@ -126,7 +126,7 @@ const Scanner: React.FC = () => {
     // Smart Parsing: Extract first sequence of digits
     const match = inputVal.match(/\d+/);
     if (!match) {
-        setResultMessage("ERROR: NO NUMERIC DATA DETECTED IN INPUT.");
+        setResultMessage("ERRO: NENHUM DADO NUMÉRICO DETECTADO.");
         setStatus('composite');
         return;
     }
@@ -182,13 +182,13 @@ const Scanner: React.FC = () => {
         </div>
         <div>
             <h2 className="text-2xl font-bold font-mono text-white tracking-tight flex items-center gap-2">
-                PRIMALTY SCANNER
+                SCANNER DE PRIMALIDADE
                 <span className="text-[10px] bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded border border-purple-500/30 flex items-center gap-1">
                   <Sparkles size={10} />
                   v3.0 AI-CORE
                 </span>
             </h2>
-            <p className="text-xs text-gray-500 font-mono tracking-widest uppercase">Quantum Heuristic Analysis Engine</p>
+            <p className="text-xs text-gray-500 font-mono tracking-widest uppercase">Motor de Análise Heurística Quântica</p>
         </div>
       </div>
 
@@ -295,7 +295,7 @@ const Scanner: React.FC = () => {
           {/* Factors Display for Composite */}
           {status === 'composite' && resultData?.factors && (
             <div className="mt-4 p-3 bg-black/30 rounded border border-white/5">
-                <p className="text-sm text-gray-400 mb-2">Fatores Primos Encontrados:</p>
+                <p className="text-sm text-gray-400 mb-2 font-mono">Fatores Primos Encontrados:</p>
                 <div className="flex flex-wrap gap-2">
                     {resultData.factors.map((factor, idx) => (
                         <span key={idx} className="px-2 py-1 bg-white/5 rounded text-xs font-mono text-red-300 border border-red-500/20">
