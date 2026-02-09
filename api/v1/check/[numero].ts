@@ -57,7 +57,7 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
       license: 'MIT'
     });
 
-  } catch (error) {
+  } catch {
     return res.status(500).json({ error: 'Erro interno de processamento.' });
   }
 }

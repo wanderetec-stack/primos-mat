@@ -8,7 +8,7 @@ export const useTelegram = () => {
       // Silently catch errors to avoid console noise on static deployments
       fetch('/api/v1/monitor?page=' + encodeURIComponent(window.location.pathname))
         .catch(() => {}); // Silent catch
-    } catch (e) {
+    } catch {
       // Ignore errors
     }
   }, []);
@@ -27,7 +27,7 @@ export const useTelegram = () => {
           count
         })
       }).catch(() => {}); // Silent catch
-    } catch (e) {
+    } catch {
       // Ignore errors
     }
   }, []);
@@ -40,7 +40,9 @@ export const useTelegram = () => {
       try {
         fetch('/api/v1/monitor?type=heartbeat')
           .catch(() => {});
-      } catch (e) {}
+      } catch {
+          // Ignore errors
+      }
     }, 5 * 60 * 1000); // 5 minutes
 
     return () => clearInterval(interval);

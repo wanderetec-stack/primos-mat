@@ -24,11 +24,11 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
     method: 'GET'
   };
 
-  const tgReq = https.request(tgOptions, (tgRes) => {
+  const tgReq = https.request(tgOptions, () => {
     res.status(200).json({ status: 'Notification sent' });
   });
 
-  tgReq.on('error', (e) => {
+  tgReq.on('error', () => {
     res.status(500).json({ error: 'Failed to send notification' });
   });
 

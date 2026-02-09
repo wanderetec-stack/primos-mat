@@ -30,7 +30,7 @@ const DailyPrime: React.FC = () => {
           text: text,
           url: 'https://primos.mat.br'
         });
-      } catch (err) {
+      } catch {
         console.log('Share cancelled');
       }
     } else {

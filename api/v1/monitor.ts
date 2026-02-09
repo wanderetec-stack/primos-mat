@@ -43,7 +43,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 `⚠️ Ação: Bloqueio Recomendado`;
       break;
 
-    case 'alert':
+    case 'alert': {
       const { alertType, detail, count } = req.body || req.query;
       message = `🛡️ *AVISO DE SEGURANÇA* %0A%0A` +
                 `⚠️ Tipo: \`${alertType || 'General'}\`%0A` +
@@ -51,6 +51,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 `🔢 Ocorrências: ${count || 1}%0A` +
                 `🕵️ IP: \`${clientIP}\``;
       break;
+    }
 
     default: // Generic Visit
       message = `👤 *NOVO VISITANTE* %0A%0A` +

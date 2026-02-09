@@ -35,7 +35,7 @@ const TelemetryMonitor: React.FC = () => {
           uptime: `${hours}h ${minutes}m`,
           discoveries: prev.discoveries + (Math.random() > 0.7 ? 1 : 0) // Simulate live activity
         }));
-      } catch (e) {
+      } catch {
         setTelemetry(prev => ({ ...prev, status: 'OFFLINE', latency: 0 }));
       }
     };

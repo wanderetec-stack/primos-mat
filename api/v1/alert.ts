@@ -17,8 +17,8 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
     method: 'GET'
   };
 
-  const tgReq = https.request(tgOptions, (tgRes) => {
-    // Return a fake 404 or 403 to the attacker
+  const tgReq = https.request(tgOptions, () => {
+     // Return a fake 404 or 403 to the attacker
     res.status(404).send('Not Found');
   });
 

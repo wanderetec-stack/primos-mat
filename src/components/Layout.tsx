@@ -14,7 +14,7 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage = '' }) => {
 
   useEffect(() => {
     trackVisit();
-  }, []);
+  }, [trackVisit]);
 
   useEffect(() => {
     const handleScroll = () => {
