@@ -16,7 +16,7 @@
     <link rel="dns-prefetch" href="https://wolframalpha.com">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="msvalidate.01" content="250FA0136F31D550EEC7BCF623ECC0BB" />
-    <title>PRIMOS.MAT.BR | Scanner de Primos & Criptografia RSA de Alta Performance</title>
+    <title>Primos Mat - Matemática Pura & Segurança</title>
     <meta name="description" content="Scanner de Primalidade em Tempo Real, Espiral de Ulam e Ferramentas de Criptografia RSA. Infraestrutura segura para análise numérica avançada, matemática computacional e segurança digital." />
     <meta name="keywords" content="números primos, criptografia RSA, teste de primalidade, matemática avançada, segurança digital, espiral de ulam, daily prime, números de mersenne" />
     <script type="application/ld+json">
@@ -44,12 +44,12 @@
         }
       }
     </script>
-    <script type="module" crossorigin src="./assets/main-BpUyNVid.js"></script>
-    <link rel="modulepreload" crossorigin href="./assets/Layout-ydfn_L14.js">
-    <link rel="modulepreload" crossorigin href="./assets/circle-alert-Bond8S5k.js">
-    <link rel="modulepreload" crossorigin href="./assets/server-D1PDResQ.js">
-    <link rel="modulepreload" crossorigin href="./assets/code-B6bABtL7.js">
-    <link rel="stylesheet" crossorigin href="./assets/Layout-CGUzN-o0.css">
+    <script type="module" crossorigin src="./assets/main-CbjmjH2m.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/Layout-DvXshzDE.js">
+    <link rel="modulepreload" crossorigin href="./assets/circle-alert-Dsqh_cj_.js">
+    <link rel="modulepreload" crossorigin href="./assets/info-DCaWNJja.js">
+    <link rel="modulepreload" crossorigin href="./assets/server-CdvRAHB4.js">
+    <link rel="stylesheet" crossorigin href="./assets/Layout-DrZWSRxG.css">
   </head>
   <body>
     <div id="root"></div>
@@ -57,7 +57,11 @@
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js');
+          navigator.serviceWorker.register('/sw.js?v=14').then(registration => {
+            console.log('SW registered: ', registration);
+          }).catch(registrationError => {
+            console.log('SW registration failed: ', registrationError);
+          });
         });
       }
     </script>
