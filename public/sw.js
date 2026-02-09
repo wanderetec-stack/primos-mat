@@ -1,4 +1,4 @@
-const CACHE_NAME = 'primos-mat-v8-scanner-fix';
+const CACHE_NAME = 'primos-mat-v9-ai-ptbr';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',

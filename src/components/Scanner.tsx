@@ -6,7 +6,13 @@ const Scanner: React.FC = () => {
   const [inputVal, setInputVal] = useState('');
   const [status, setStatus] = useState<'idle' | 'scanning' | 'prime' | 'composite'>('idle');
   const [resultMessage, setResultMessage] = useState('');
-  const [aiInsight, setAiInsight] = useState('');
+  interface AIInsightData {
+    message: string;
+    explanation?: string;
+    formula?: string;
+  }
+
+  const [aiInsight, setAiInsight] = useState<AIInsightData | null>(null);
   const [executionTime, setExecutionTime] = useState(0);
   const [resultData, setResultData] = useState<{number: string, isPrime: boolean, factors?: string[], time: number} | null>(null);
   
@@ -15,25 +21,69 @@ const Scanner: React.FC = () => {
   const [lastScanTime, setLastScanTime] = useState(0);
   const { sendAlert } = useTelegram();
 
-  const getAIInsights = (n: bigint, isPrime: boolean): string => {
-    if (n === 2n) return "AI CORE: The only even prime number. The basis of all binary computation.";
-    if (n < 2n) return "AI CORE: Value too low. Primes are integers greater than 1.";
+  const getAIInsights = (n: bigint, isPrime: boolean): AIInsightData => {
+    if (n === 2n) return {
+      message: "AI CORE: O único número primo par. A base de toda computação binária.",
+      explanation: "O número 2 é divisível apenas por 1 e por ele mesmo. É o único par com essa propriedade.",
+      formula: "2 ÷ 1 = 2, 2 ÷ 2 = 1"
+    };
+    if (n < 2n) return {
+      message: "AI CORE: Valor muito baixo. Primos devem ser maiores que 1.",
+      explanation: "Por definição, números primos são inteiros positivos maiores que 1.",
+      formula: "n > 1"
+    };
     
     const s = n.toString();
     const isPalindrome = s === s.split('').reverse().join('');
 
     if (isPrime) {
-       if (isPalindrome) return "AI CORE: PALINDROMIC PRIME DETECTED! Reads the same forwards and backwards.";
-       if (n > 1000000n) return "AI CORE: High-magnitude prime detected. Suitable for cryptographic key generation.";
-       if ((n - 1n) % 4n === 0n) return "AI CORE: Pythagorean Prime (4n + 1). Can be expressed as sum of two squares.";
-       return "AI CORE: Valid Prime Entity confirmed. Structure is indivisible.";
+       if (isPalindrome) return {
+         message: "AI CORE: PRIMO PALÍNDROMO DETECTADO! Lê-se da mesma forma em ambos os sentidos.",
+         explanation: "Este número possui simetria perfeita em sua representação decimal, além de ser indivisível.",
+         formula: `${s} ↔ ${s.split('').reverse().join('')}`
+       };
+       if (n > 1000000n) return {
+         message: "AI CORE: Primo de alta magnitude detectado. Adequado para geração de chaves criptográficas.",
+         explanation: "Números primos grandes são essenciais para algoritmos como RSA, pois sua fatoração é computacionalmente inviável.",
+         formula: "P > 10⁶"
+       };
+       if ((n - 1n) % 4n === 0n) return {
+         message: "AI CORE: Primo Pitagórico (4n + 1). Pode ser expresso como a soma de dois quadrados.",
+         explanation: "Teorema de Fermat sobre a soma de dois quadrados: primos da forma 4n+1 podem ser escritos como a² + b².",
+         formula: `${n} = a² + b²`
+       };
+       return {
+         message: "AI CORE: Entidade Prima Válida confirmada. Estrutura indivisível.",
+         explanation: "O número não possui divisores além de 1 e ele mesmo.",
+         formula: `${n} ÷ x ≠ inteiro`
+       };
     } else {
-       if (n % 2n === 0n) return "AI CORE: Even number detected. Trivially divisible by 2.";
-       if (n % 5n === 0n) return "AI CORE: Pattern ends in 0 or 5. Divisible by 5.";
+       if (n % 2n === 0n) return {
+         message: "AI CORE: Número par detectado. Trivialmente divisível por 2.",
+         explanation: "Todo número par maior que 2 é composto, pois pode ser dividido por 2.",
+         formula: `${n} ÷ 2 = ${(n / 2n).toString()}`
+       };
+       if (n % 5n === 0n) return {
+         message: "AI CORE: Padrão terminado em 0 ou 5. Divisível por 5.",
+         explanation: "Qualquer número que termina em 0 ou 5 é múltiplo de 5.",
+         formula: `${n} ÷ 5 = ${(n / 5n).toString()}`
+       };
        const sum = s.split('').reduce((a, b) => a + parseInt(b), 0);
-       if (sum % 3 === 0) return `AI CORE: Digital root sum is ${sum}. Divisible by 3 via divisibility rule.`;
-       if (isPalindrome) return "AI CORE: Palindromic Composite. Symmetric but divisible.";
-       return "AI CORE: Composite structure. Decomposable into smaller prime factors.";
+       if (sum % 3 === 0) return {
+         message: `AI CORE: Soma digital é ${sum}. Divisível por 3 pela regra de divisibilidade.`,
+         explanation: `A soma dos algarismos (${s.split('').join('+')}) resulta em ${sum}, que é divisível por 3. Logo, ${n} também é.`,
+         formula: `${n} ÷ 3 = ${(n / 3n).toString()}`
+       };
+       if (isPalindrome) return {
+         message: "AI CORE: Composto Palíndromo. Simétrico mas divisível.",
+         explanation: "Apesar de sua simetria visual, o número possui divisores.",
+         formula: "Composto Simétrico"
+       };
+       return {
+         message: "AI CORE: Estrutura composta. Decomponível em fatores menores.",
+         explanation: "O número possui divisores além de 1 e ele mesmo, o que o desqualifica como primo.",
+         formula: "Possui fatores"
+       };
     }
   };
 
@@ -101,7 +151,7 @@ const Scanner: React.FC = () => {
 
     setStatus('scanning');
     setResultMessage('');
-    setAiInsight('');
+    setAiInsight(null);
     
     // Simulate slight delay for "Scanner Effect"
     setTimeout(() => {
@@ -217,11 +267,28 @@ const Scanner: React.FC = () => {
             <div className="mt-4 p-4 bg-purple-500/10 border border-purple-500/20 rounded-lg animate-in zoom-in-95 duration-300">
                <div className="flex items-center gap-2 mb-2">
                  <Brain size={16} className="text-purple-400" />
-                 <span className="text-xs font-bold text-purple-400 uppercase tracking-wider">AI Insight</span>
+                 <span className="text-xs font-bold text-purple-400 uppercase tracking-wider">Análise IA Core</span>
                </div>
-               <p className="text-sm text-gray-300 font-mono leading-relaxed border-l-2 border-purple-500/30 pl-3">
-                 {aiInsight}
+               
+               {/* Main Insight Message */}
+               <p className="text-sm text-gray-200 font-bold mb-3 border-l-2 border-purple-500 pl-3">
+                 {aiInsight.message}
                </p>
+
+               {/* Detailed Explanation */}
+               {aiInsight.explanation && (
+                 <div className="mb-3 text-sm text-gray-400 pl-3 border-l-2 border-purple-500/30">
+                   <p>{aiInsight.explanation}</p>
+                 </div>
+               )}
+
+               {/* Mathematical Formula/Proof */}
+               {aiInsight.formula && (
+                 <div className="mt-2 bg-black/40 rounded p-2 pl-3 border-l-2 border-blue-500/50 font-mono text-xs text-blue-300 flex items-center gap-2">
+                   <span className="opacity-50">Lógica:</span>
+                   {aiInsight.formula}
+                 </div>
+               )}
             </div>
           )}
 
