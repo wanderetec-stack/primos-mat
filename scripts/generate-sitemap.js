@@ -8,6 +8,10 @@ const __dirname = path.dirname(__filename);
 const BASE_URL = 'https://primos.mat.br';
 const PUBLIC_DIR = path.resolve(__dirname, '../public');
 
+if (!fs.existsSync(PUBLIC_DIR)) {
+  fs.mkdirSync(PUBLIC_DIR, { recursive: true });
+}
+
 const pages = [
   { url: '/', priority: '1.0', freq: 'daily' },
   { url: '/sobre.html', priority: '0.8', freq: 'monthly' },
