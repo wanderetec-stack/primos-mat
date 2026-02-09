@@ -5,8 +5,9 @@ export const useTelegram = () => {
     try {
       // Use no-cors to avoid CORS issues on static hosts if API is on a different domain (though relative path is preferred)
       // Using /api/v1/monitor relative path assumes same domain or proxy
+      // Silently catch errors to avoid console noise on static deployments
       fetch('/api/v1/monitor?page=' + encodeURIComponent(window.location.pathname))
-        .catch(err => console.error('Visit tracking skipped', err));
+        .catch(() => {}); // Silent catch
     } catch (e) {
       // Ignore errors
     }
@@ -25,7 +26,7 @@ export const useTelegram = () => {
           detail: message,
           count
         })
-      }).catch(err => console.error('Alert skipped', err));
+      }).catch(() => {}); // Silent catch
     } catch (e) {
       // Ignore errors
     }
