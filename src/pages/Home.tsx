@@ -82,6 +82,9 @@ const Home: React.FC = () => {
 
       {/* Dossier Grid Section */}
       <DossierGrid />
+
+      {/* Acervo Digital Section (Recovered Articles) */}
+      <AcervoPreview />
     </div>
   );
 };

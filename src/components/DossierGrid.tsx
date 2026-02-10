@@ -38,48 +38,61 @@ const DossierGrid: React.FC = () => {
           <article 
             key={entry.id}
             onClick={() => setSelectedDossier(entry)}
-            className="group cursor-pointer bg-[#0a0a0a] border border-white/10 hover:border-purple-500/50 rounded-xl overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(168,85,247,0.2)]"
+            className="group cursor-pointer bg-[#0a0a0a] border border-white/10 hover:border-purple-500/50 rounded-xl overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(168,85,247,0.2)] flex flex-col h-full"
           >
             {/* Book Cover Style Visual */}
-            <div className={`h-48 w-full relative overflow-hidden ${entry.isPrime ? 'bg-gradient-to-br from-slate-900 via-blue-900/40 to-slate-900' : 'bg-gradient-to-br from-slate-900 via-red-900/40 to-slate-900'}`}>
-                {/* Abstract Geometric Pattern (CSS generated) */}
-                <div className="absolute inset-0 opacity-20" style={{ 
-                    backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.15) 1px, transparent 0)',
-                    backgroundSize: '24px 24px' 
+            <div className={`h-48 w-full relative overflow-hidden ${
+                entry.isPrime 
+                ? 'bg-gradient-to-br from-blue-600 via-indigo-800 to-slate-900' 
+                : 'bg-gradient-to-br from-red-600 via-orange-800 to-slate-900'
+            }`}>
+                {/* Abstract Geometric Pattern */}
+                <div className="absolute inset-0 opacity-40" style={{ 
+                    backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.2) 1px, transparent 0)',
+                    backgroundSize: '20px 20px' 
                 }}></div>
                 
+                {/* Decorative Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent opacity-60"></div>
+
                 {/* Center Badge/Symbol */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center p-6">
-                    <div className={`w-20 h-20 rounded-full flex items-center justify-center mb-4 border-2 ${entry.isPrime ? 'border-primary/30 bg-primary/5 text-primary' : 'border-red-500/30 bg-red-500/5 text-red-400'} backdrop-blur-md shadow-2xl group-hover:scale-110 transition-transform duration-500`}>
-                        <Hash size={32} />
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 z-10">
+                    <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-3 border-2 ${
+                        entry.isPrime 
+                        ? 'border-white/30 bg-blue-500/20 text-white shadow-[0_0_15px_rgba(59,130,246,0.5)]' 
+                        : 'border-white/30 bg-red-500/20 text-white shadow-[0_0_15px_rgba(239,68,68,0.5)]'
+                    } backdrop-blur-md group-hover:scale-110 transition-transform duration-500`}>
+                        <Hash size={28} />
                     </div>
-                    <span className="text-4xl font-bold font-mono text-white tracking-tighter shadow-black drop-shadow-lg">
+                    <span className="text-3xl font-bold font-mono text-white tracking-tighter drop-shadow-md">
                         {entry.number}
                     </span>
                 </div>
 
                 {/* Status Badge */}
-                <div className="absolute top-4 right-4">
+                <div className="absolute top-4 right-4 z-20">
                     {entry.isPrime ? (
-                        <span className="bg-primary/10 backdrop-blur-md text-primary text-[10px] font-bold px-3 py-1 rounded-full border border-primary/20 flex items-center gap-1">
-                            <Sparkles size={10} /> PRIMO
+                        <span className="bg-blue-500/20 backdrop-blur-md text-white text-[10px] font-bold px-3 py-1 rounded-full border border-blue-400/30 flex items-center gap-1 shadow-lg">
+                            <Sparkles size={10} className="text-blue-300" /> PRIMO
                         </span>
                     ) : (
-                        <span className="bg-red-500/10 backdrop-blur-md text-red-400 text-[10px] font-bold px-3 py-1 rounded-full border border-red-500/20 flex items-center gap-1">
-                            <Layers size={10} /> COMPOSTO
+                        <span className="bg-red-500/20 backdrop-blur-md text-white text-[10px] font-bold px-3 py-1 rounded-full border border-red-400/30 flex items-center gap-1 shadow-lg">
+                            <Layers size={10} className="text-red-300" /> COMPOSTO
                         </span>
                     )}
                 </div>
             </div>
 
-            <div className="p-6 border-t border-white/5">
-                <h3 className="text-lg font-bold text-white mb-2 font-mono leading-tight group-hover:text-purple-400 transition-colors">
-                    Dossiê Matemático do Número {entry.number}
-                </h3>
-                <p className="text-xs text-gray-500 mb-4 font-mono flex items-center gap-2">
-                    <Clock size={12} />
-                    Gerado em {new Date(entry.timestamp).toLocaleDateString()}
-                </p>
+            <div className="p-6 border-t border-white/5 flex-1 flex flex-col justify-between">
+                <div>
+                    <h3 className="text-lg font-bold text-white mb-2 font-mono leading-tight group-hover:text-purple-400 transition-colors">
+                        Dossiê Matemático do Número {entry.number}
+                    </h3>
+                    <p className="text-xs text-gray-500 mb-4 font-mono flex items-center gap-2">
+                        <Clock size={12} />
+                        Gerado em {new Date(entry.timestamp).toLocaleDateString()}
+                    </p>
+                </div>
                 
                 <div className="flex items-center justify-between mt-4">
                     <span className="text-xs text-gray-600 font-mono bg-white/5 px-2 py-1 rounded">
