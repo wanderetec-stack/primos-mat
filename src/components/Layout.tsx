@@ -93,7 +93,7 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage = '' }) => {
               <Shield size={14} />
               <span>PROTECTED BY MATHEMATICS</span>
             </div>
-            <p className="text-xs text-muted max-w-xs text-center md:text-left">
+            <p className="text-xs text-muted text-center md:text-left">
               © {new Date().getFullYear()} Primos.mat.br. Desenvolvido e criado por Wander Santos.
             </p>
           </div>
