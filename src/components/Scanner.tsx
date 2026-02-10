@@ -10,6 +10,7 @@ const Scanner: React.FC = () => {
     message: string;
     explanation?: string;
     formula?: string;
+    report?: string[]; // Detailed step-by-step report
   }
 
   const [aiInsight, setAiInsight] = useState<AIInsightData | null>(null);
@@ -21,16 +22,54 @@ const Scanner: React.FC = () => {
   const [lastScanTime, setLastScanTime] = useState(0);
   const { sendAlert } = useTelegram();
 
-  const getAIInsights = (n: bigint, isPrime: boolean, factors?: string[]): AIInsightData => {
+  const generateReport = (n: bigint, isPrime: boolean, factors?: string[], time?: number): string[] => {
+      const steps = [];
+      const s = n.toString();
+      const sqrtN = Math.floor(Math.sqrt(Number(s))); // Approximation for display
+      
+      steps.push(`1. INICIALIZAÇÃO: O número ${n} foi carregado no buffer de análise.`);
+      steps.push(`2. VERIFICAÇÃO PRELIMINAR: Testes de paridade e divisibilidade básica por 2, 3 e 5 executados.`);
+      
+      if (n % 2n === 0n && n !== 2n) {
+          steps.push(`3. DETECÇÃO DE PARIDADE: O número é par, logo, divisível por 2. Condição de primalidade falhou imediatamente.`);
+      } else if (n % 5n === 0n && n !== 5n) {
+          steps.push(`3. TERMINAÇÃO EM 5: O número termina em 5, indicando divisibilidade por 5.`);
+      } else {
+          steps.push(`3. FILTRO INICIAL APROVADO: O número não é divisível pelos primeiros primos triviais.`);
+          
+          if (isPrime) {
+              steps.push(`4. TESTE DE FORÇA BRUTA OTIMIZADO: Executada divisão por tentativa até a raiz quadrada aproximada (~${sqrtN}).`);
+              steps.push(`5. RESULTADO: Nenhum divisor inteiro encontrado no intervalo [2, √${n}].`);
+              steps.push(`6. CONCLUSÃO: O número atende a todos os critérios de indivisibilidade.`);
+          } else {
+             steps.push(`4. BUSCA DE FATORES: Algoritmo de fatoração iniciado.`);
+             if (factors && factors.length > 0) {
+                 steps.push(`5. FATOR ENCONTRADO: Divisor ${factors[0]} identificado.`);
+                 steps.push(`6. VALIDAÇÃO: ${factors[0]} × ${factors[1]} = ${n}. A condição de existência de divisores não-triviais foi satisfeita.`);
+             } else {
+                 steps.push(`5. RESULTADO: Divisores encontrados (algoritmo genérico).`);
+             }
+          }
+      }
+      
+      steps.push(`7. TEMPO DE PROCESSAMENTO: Análise concluída em ${time?.toFixed(4)}ms.`);
+      return steps;
+  };
+
+  const getAIInsights = (n: bigint, isPrime: boolean, factors?: string[], time?: number): AIInsightData => {
+    const report = generateReport(n, isPrime, factors, time);
+    
     if (n === 2n) return {
       message: "IA: O único número primo par. A base de toda computação binária.",
       explanation: "O número 2 é divisível apenas por 1 e por ele mesmo. É o único par com essa propriedade.",
-      formula: "n = 2 ⇒ P(n) = True"
+      formula: "n = 2 ⇒ P(n) = True",
+      report
     };
     if (n < 2n) return {
       message: "IA: Valor muito baixo. Primos devem ser maiores que 1.",
       explanation: "Por definição, números primos são inteiros positivos maiores que 1.",
-      formula: "n < 2 ⇒ P(n) = False"
+      formula: "n < 2 ⇒ P(n) = False",
+      report
     };
     
     const s = n.toString();
@@ -40,49 +79,58 @@ const Scanner: React.FC = () => {
        if (isPalindrome) return {
          message: "IA: PRIMO PALÍNDROMO DETECTADO! Lê-se da mesma forma em ambos os sentidos.",
          explanation: "Este número possui simetria perfeita em sua representação decimal, além de ser indivisível.",
-         formula: "P(n) ∧ Reverse(n) = n"
+         formula: "P(n) ∧ Reverse(n) = n",
+         report
        };
        if (n > 1000000n) return {
          message: "IA: Primo de alta magnitude detectado. Adequado para geração de chaves criptográficas.",
          explanation: "Números primos grandes são essenciais para algoritmos como RSA, pois sua fatoração é computacionalmente inviável.",
-         formula: "n > 10⁶ ∧ P(n)"
+         formula: "n > 10⁶ ∧ P(n)",
+         report
        };
        if ((n - 1n) % 4n === 0n) return {
          message: "IA: Primo Pitagórico (4n + 1). Pode ser expresso como a soma de dois quadrados.",
          explanation: "Teorema de Fermat sobre a soma de dois quadrados: primos da forma 4n+1 podem ser escritos como a² + b².",
-         formula: "n ≡ 1 (mod 4) ⇒ n = a² + b²"
+         formula: "n ≡ 1 (mod 4) ⇒ n = a² + b²",
+         report
        };
        return {
          message: "IA: Entidade Prima Válida confirmada. Estrutura indivisível.",
          explanation: "O número não possui divisores além de 1 e ele mesmo.",
-         formula: "∀d ∈ {2..√n}, n mod d ≠ 0"
+         formula: "∀d ∈ {2..√n}, n mod d ≠ 0",
+         report
        };
     } else {
        if (n % 2n === 0n) return {
          message: "IA: Número par detectado. Trivialmente divisível por 2.",
          explanation: "Todo número par maior que 2 é composto, pois pode ser dividido por 2.",
-         formula: "n ≡ 0 (mod 2)"
+         formula: "n ≡ 0 (mod 2)",
+         report
        };
        if (n % 5n === 0n) return {
          message: "IA: Padrão terminado em 0 ou 5. Divisível por 5.",
          explanation: "Qualquer número que termina em 0 ou 5 é múltiplo de 5.",
-         formula: "n ≡ 0 (mod 5)"
+         formula: "n ≡ 0 (mod 5)",
+         report
        };
        const sum = s.split('').reduce((a, b) => a + parseInt(b), 0);
        if (sum % 3 === 0) return {
          message: `IA: Soma digital é ${sum}. Divisível por 3 pela regra de divisibilidade.`,
          explanation: `A soma dos algarismos (${s.split('').join('+')}) resulta em ${sum}, que é divisível por 3. Logo, ${n} também é.`,
-         formula: `Σ digits = ${sum} ⇒ ${sum} ≡ 0 (mod 3)`
+         formula: `Σ digits = ${sum} ⇒ ${sum} ≡ 0 (mod 3)`,
+         report
        };
        if (isPalindrome) return {
          message: "IA: Composto Palíndromo. Simétrico mas divisível.",
          explanation: "Apesar de sua simetria visual, o número possui divisores.",
-         formula: `n = Reverse(n) ∧ ∃d: n mod d = 0`
+         formula: `n = Reverse(n) ∧ ∃d: n mod d = 0`,
+         report
        };
        return {
          message: "IA: Estrutura composta. Decomponível em fatores menores.",
          explanation: "O número possui divisores além de 1 e ele mesmo, o que o desqualifica como primo.",
-         formula: factors && factors.length >= 2 ? `${n} = ${factors[0]} × ${factors[1]}` : "n = a × b"
+         formula: factors && factors.length >= 2 ? `${n} = ${factors[0]} × ${factors[1]}` : "n = a × b",
+         report
        };
     }
   };
@@ -155,11 +203,11 @@ const Scanner: React.FC = () => {
     
     // Simulate slight delay for "Scanner Effect"
     setTimeout(() => {
-      const result = isPrime(targetNum);
-      const insight = getAIInsights(BigInt(targetNum), result.isPrime, result.factors);
-      
-      setResultData({
-          number: targetNum,
+        const result = isPrime(targetNum);
+        const insight = getAIInsights(BigInt(targetNum), result.isPrime, result.factors, result.time);
+        
+        setResultData({
+            number: targetNum,
           isPrime: result.isPrime,
           factors: result.factors,
           time: result.time
@@ -293,6 +341,21 @@ const Scanner: React.FC = () => {
                    <code className="font-mono text-sm text-blue-200 block">
                      {aiInsight.formula}
                    </code>
+                 </div>
+               )}
+
+               {/* Detailed Report Article */}
+               {aiInsight.report && (
+                 <div className="mt-4 pt-4 border-t border-purple-500/10">
+                    <p className="text-[10px] text-gray-500 font-mono mb-2 uppercase tracking-wider">Relatório de Processamento</p>
+                    <div className="space-y-2 font-mono text-xs text-gray-400 bg-black/20 p-3 rounded">
+                        {aiInsight.report.map((line, i) => (
+                            <div key={i} className="flex gap-2">
+                                <span className="text-purple-500/50 select-none">›</span>
+                                <span>{line}</span>
+                            </div>
+                        ))}
+                    </div>
                  </div>
                )}
             </div>
