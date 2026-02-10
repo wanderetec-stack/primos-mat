@@ -1,0 +1,32 @@
+
+
+ComputerName           : 85.209.2
+                         .196
+RemoteAddress          : 85.209.2
+                         .196
+RemotePort             : 80
+InterfaceAlias         : Wi-Fi 2
+SourceAddress          : 192.168.
+                         15.5
+PingSucceeded          : False
+PingReplyDetails (RTT) : 0 ms
+TcpTestSucceeded       : False
+
+
+
+
+
+ComputerName           : 85.209.2
+                         .196
+RemoteAddress          : 85.209.2
+                         .196
+RemotePort             : 443
+InterfaceAlias         : Wi-Fi 2
+SourceAddress          : 192.168.
+                         15.5
+PingSucceeded          : False
+PingReplyDetails (RTT) : 0 ms
+TcpTestSucceeded       : False
+
+
+

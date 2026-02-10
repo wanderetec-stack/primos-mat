@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Activity, CheckCircle, AlertTriangle, Cpu, Search, Brain, Sparkles } from 'lucide-react';
 import { useTelegram } from '../hooks/useTelegram';
+import { saveDossier } from '../utils/dossierStore';
 
 const Scanner: React.FC = () => {
   const [inputVal, setInputVal] = useState('');
@@ -216,6 +217,14 @@ const Scanner: React.FC = () => {
       setResultMessage(result.isPrime ? "ENTIDADE PRIMA CONFIRMADA" : "ENTIDADE COMPOSTA DETECTADA");
       setStatus(result.isPrime ? 'prime' : 'composite');
       setExecutionTime(result.time);
+
+      saveDossier({
+        number: targetNum,
+        isPrime: result.isPrime,
+        factors: result.factors,
+        executionTime: result.time,
+        aiInsight: insight
+      });
     }, 800);
   };
 

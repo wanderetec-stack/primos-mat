@@ -5,6 +5,7 @@ import { Database, Zap, Lock } from 'lucide-react';
 import UlamSpiral from '../components/UlamSpiral';
 import DailyPrime from '../components/DailyPrime';
 import TelemetryMonitor from '../components/TelemetryMonitor';
+import DossierGrid from '../components/DossierGrid';
 
 const Home: React.FC = () => {
 
@@ -78,6 +79,9 @@ const Home: React.FC = () => {
 
       {/* Stats / Info Strip */}
       <TelemetryMonitor />
+
+      {/* Dossier Grid Section */}
+      <DossierGrid />
     </div>
   );
 };

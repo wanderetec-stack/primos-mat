@@ -1,0 +1,54 @@
+=== TESTE DE CONEXÃO INICIADO ===
+Porta 80: FECHADA (Erro: 10035)
+Porta 443: FECHADA (Erro: 10035)
+HTTP GET: Falhou (HTTPConnectionPool(host='85.209.2.196', port=80): Max retries exceeded with url: / (Caused by ConnectTimeoutError(<HTTPConnection(host='85.209.2.196', port=80) at 0x2b8dd1fbb60>, 'Connection to 85.209.2.196 timed out. (connect timeout=5)')))
+=== FIM DO TESTE ===
+=== TESTE DE CONEXÃO INICIADO ===
+Porta 80: FECHADA (Erro: 10035)
+Porta 443: FECHADA (Erro: 10035)
+HTTP GET: Falhou (HTTPConnectionPool(host='85.209.2.196', port=80): Max retries exceeded with url: / (Caused by ConnectTimeoutError(<HTTPConnection(host='85.209.2.196', port=80) at 0x1a6e496bb60>, 'Connection to 85.209.2.196 timed out. (connect timeout=5)')))
+=== FIM DO TESTE ===
+=== TESTE DE CONEXÃO INICIADO ===
+Porta 80: FECHADA (Erro: 10035)
+Porta 443: FECHADA (Erro: 10035)
+HTTP GET: Falhou (HTTPConnectionPool(host='85.209.2.196', port=80): Max retries exceeded with url: / (Caused by ConnectTimeoutError(<HTTPConnection(host='85.209.2.196', port=80) at 0x28d66cbbb60>, 'Connection to 85.209.2.196 timed out. (connect timeout=5)')))
+=== FIM DO TESTE ===
+=== TESTE DE CONEXÃO INICIADO ===
+Porta 80: FECHADA (Erro: 10035)
+Porta 443: FECHADA (Erro: 10035)
+HTTP GET: Falhou (HTTPConnectionPool(host='85.209.2.196', port=80): Max retries exceeded with url: / (Caused by ConnectTimeoutError(<HTTPConnection(host='85.209.2.196', port=80) at 0x21c5625bb60>, 'Connection to 85.209.2.196 timed out. (connect timeout=5)')))
+=== FIM DO TESTE ===
+=== TESTE DE CONEXÃO INICIADO ===
+Porta 80: FECHADA (Erro: 10035)
+Porta 443: FECHADA (Erro: 10035)
+HTTP GET: Falhou (HTTPConnectionPool(host='85.209.2.196', port=80): Max retries exceeded with url: / (Caused by ConnectTimeoutError(<HTTPConnection(host='85.209.2.196', port=80) at 0x21f8fa9bb60>, 'Connection to 85.209.2.196 timed out. (connect timeout=5)')))
+=== FIM DO TESTE ===
+=== TESTE DE CONEXÃO INICIADO ===
+Porta 80: FECHADA (Erro: 10035)
+Porta 443: FECHADA (Erro: 10035)
+HTTP GET: Falhou (HTTPConnectionPool(host='85.209.2.196', port=80): Max retries exceeded with url: / (Caused by ConnectTimeoutError(<HTTPConnection(host='85.209.2.196', port=80) at 0x20d4d1cbb60>, 'Connection to 85.209.2.196 timed out. (connect timeout=5)')))
+=== FIM DO TESTE ===
+=== TESTE DE CONEXÃO INICIADO ===
+Porta 80: FECHADA (Erro: 10035)
+Porta 443: FECHADA (Erro: 10035)
+HTTP GET: Falhou (HTTPConnectionPool(host='85.209.2.196', port=80): Max retries exceeded with url: / (Caused by ConnectTimeoutError(<HTTPConnection(host='85.209.2.196', port=80) at 0x1ec768cbb60>, 'Connection to 85.209.2.196 timed out. (connect timeout=5)')))
+=== FIM DO TESTE ===
+=== TESTE DE CONEXÃO INICIADO ===
+Porta 80: FECHADA (Erro: 10035)
+Porta 443: FECHADA (Erro: 10035)
+HTTP GET: Falhou (HTTPConnectionPool(host='85.209.2.196', port=80): Max retries exceeded with url: / (Caused by ConnectTimeoutError(<HTTPConnection(host='85.209.2.196', port=80) at 0x2317df6bb60>, 'Connection to 85.209.2.196 timed out. (connect timeout=5)')))
+=== FIM DO TESTE ===
+=== TESTE DE CONEXÃO INICIADO ===
+Porta 80: FECHADA (Erro: 10035)
+Porta 443: FECHADA (Erro: 10035)
+Porta 8080: FECHADA (Erro: 10035)
+Tentando HTTP GET na porta 80...
+HTTP GET: Falhou (HTTPConnectionPool(host='85.209.2.196', port=80): Max retries exceeded with url: / (Caused by ConnectTimeoutError(<HTTPConnection(host='85.209.2.196', port=80) at 0x2009f9dbb60>, 'Connection to 85.209.2.196 timed out. (connect timeout=5)')))
+=== FIM DO TESTE ===
+=== TESTE DE CONEXÃO INICIADO ===
+Porta 80: FECHADA (Erro: 10035)
+Porta 443: FECHADA (Erro: 10035)
+Porta 8080: FECHADA (Erro: 10035)
+Tentando HTTP GET na porta 80...
+HTTP GET: Falhou (HTTPConnectionPool(host='85.209.2.196', port=80): Max retries exceeded with url: / (Caused by ConnectTimeoutError(<HTTPConnection(host='85.209.2.196', port=80) at 0x1636596bb60>, 'Connection to 85.209.2.196 timed out. (connect timeout=5)')))
+=== FIM DO TESTE ===
