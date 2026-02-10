@@ -39,7 +39,19 @@ const AcervoPreview: React.FC = () => {
     return colors[Math.abs(hash) % colors.length];
   };
 
-  if (loading || articles.length === 0) return null;
+  if (loading) return null;
+
+  // Se não houver artigos, mostramos uma mensagem discreta ou nada
+  // Mas agora com o fallback, isso raramente deve acontecer
+  if (articles.length === 0) {
+    return (
+      <section className="py-12 relative z-10 border-t border-white/5">
+        <div className="text-center text-gray-500">
+          <p>Carregando acervo recuperado...</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-12 relative z-10 border-t border-white/5">

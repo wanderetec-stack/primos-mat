@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import fallbackData from '../data/fallback_articles.json';
 
 export interface RecoveredArticle {
   url: string;
@@ -139,28 +140,33 @@ export const ReconService = {
   },
 
   async getPublishedArticles(): Promise<DraftArticle[]> {
-    if (!supabase) return [];
-    try {
-      const { data, error } = await supabase
-        .from('draft_articles')
-        .select('*')
-        .eq('status', 'published')
-        .order('created_at', { ascending: false });
+    let articles: DraftArticle[] = [];
 
-      if (error) throw error;
-
-      return (data || []).map(item => ({
-        id: item.id,
-        original_url: item.original_url,
-        title: item.title,
-        status: item.status,
-        created_at: item.created_at,
-        content_markdown: item.content_markdown
-      }));
-    } catch (err) {
-      console.error('Error fetching published articles:', err);
-      return [];
+    // 1. Try Supabase
+    if (supabase) {
+      try {
+        const { data, error } = await supabase
+          .from('draft_articles')
+          .select('*')
+          .eq('status', 'published')
+          .order('created_at', { ascending: false });
+          
+        if (!error && data) {
+          articles = data as DraftArticle[];
+        }
+      } catch (err) {
+        console.error('Error fetching published articles:', err);
+      }
     }
+
+    // 2. Fallback to Local JSON if empty or error
+    if (articles.length === 0) {
+      console.warn('ReconService: Using local fallback data (Offline Mode)');
+      // Cast the JSON data to match the interface
+      articles = fallbackData as unknown as DraftArticle[];
+    }
+      
+    return articles;
   },
 
   async getLatestResults(): Promise<ReconResult> {
