@@ -10,6 +10,7 @@ import NotFound from './pages/NotFound';
 import ReconDashboard from './pages/ReconDashboard';
 import DraftViewer from './pages/DraftViewer';
 import AcervoIndex from './pages/AcervoIndex';
+import Ate100GArticle from './pages/Ate100GArticle';
 
 // Auto-Update Component
 const AutoUpdater: React.FC = () => {
@@ -83,6 +84,10 @@ const AppContent: React.FC = () => {
         <Route path="/" element={<Home />} />
         <Route path="/index.html" element={<Home />} />
         <Route path="/acervo" element={<AcervoIndex />} />
+        {/* Legacy Routes Restoration */}
+        <Route path="/Ate100G_en.html" element={<Ate100GArticle />} />
+        <Route path="/ate-100-bilhoes" element={<Ate100GArticle />} />
+        
         <Route path="/criptografia-rsa-seguranca" element={<CriptografiaArticle />} />
         <Route path="/teoria-dos-numeros-primos" element={<TeoriaNumerosArticle />} />
         <Route path="/engenharia-performance-web" element={<PerformanceArticle />} />
