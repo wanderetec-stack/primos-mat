@@ -6,11 +6,20 @@ export interface RecoveredArticle {
   source: string;
 }
 
+export interface DraftArticle {
+  id: string;
+  original_url: string;
+  title: string;
+  status: string;
+  created_at: string;
+}
+
 export interface ReconResult {
   lastScan: string;
   totalLinks: number;
   status: string;
   recoveredArticles: RecoveredArticle[];
+  drafts: DraftArticle[];
 }
 
 interface ScannedUrl {
@@ -42,6 +51,7 @@ export const ReconService = {
           .single();
 
         let detailedArticles: RecoveredArticle[] = [];
+        let drafts: DraftArticle[] = [];
         
         // Fetch detailed items from scanned_urls (The Archaeologist's Findings)
         const { data: scanItems } = await supabase
@@ -51,6 +61,19 @@ export const ReconService = {
           .order('created_at', { ascending: false })
           .limit(20);
 
+        // Fetch Drafts
+        const { data: draftItems } = await supabase
+          .from('draft_articles')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(10);
+
+        // Fetch total count of recovered items
+        const { count } = await supabase
+          .from('scanned_urls')
+          .select('*', { count: 'exact', head: true })
+          .eq('status', 'recuperado');
+
         if (scanItems) {
             detailedArticles = scanItems.map((item: ScannedUrl) => ({
                 url: item.url,
@@ -59,13 +82,35 @@ export const ReconService = {
             }));
         }
 
+        if (draftItems) {
+            drafts = draftItems.map((item: DraftArticle) => ({
+                id: item.id,
+                original_url: item.original_url,
+                title: item.title,
+                status: item.status,
+                created_at: item.created_at
+            }));
+        }
+
+        // We return data even if recon_scans is empty (using current scan items)
+        if (scanItems || draftItems) {
+             return {
+                lastScan: data?.created_at || new Date().toISOString(),
+                totalLinks: count || data?.total_links || 0,
+                status: data?.status || 'Active (Hunter)',
+                recoveredArticles: detailedArticles,
+                drafts: drafts
+             };
+        }
+        
         if (data && !error) {
           return {
             lastScan: data.created_at,
             totalLinks: data.total_links,
             status: data.status,
             // Prioritize Real DB findings over the summary JSON if available
-            recoveredArticles: detailedArticles.length > 0 ? detailedArticles : data.results_json
+            recoveredArticles: detailedArticles.length > 0 ? detailedArticles : data.results_json,
+            drafts: drafts
           };
         }
         console.warn('Supabase returned error or no data, falling back to JSON:', error);
@@ -87,7 +132,8 @@ export const ReconService = {
         lastScan: new Date().toISOString(),
         totalLinks: 0,
         status: 'Offline / Error',
-        recoveredArticles: []
+        recoveredArticles: [],
+        drafts: []
       };
     }
   }
