@@ -28,6 +28,8 @@ jobs:
         go install github.com/tomnomnom/waybackurls@latest
         echo "Installing Hakrawler..."
         go install github.com/hakluke/hakrawler@latest
+        echo "Installing Katana..."
+        go install github.com/projectdiscovery/katana/cmd/katana@latest
         # Adicionar ao PATH
         export PATH=$PATH:$(go env GOPATH)/bin
         echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
@@ -37,23 +39,32 @@ jobs:
         TARGET_DOMAIN: "primos.mat.br"
       run: |
         mkdir -p temp_recon
-        echo "Iniciando varredura passiva em $TARGET_DOMAIN..."
+        echo "Iniciando varredura passiva e ativa (V12) em $TARGET_DOMAIN..."
         
-        # 1. GAU (Get All Urls)
+        # 1. GAU (Get All Urls - Histórico)
         echo "Executando GAU..."
         echo $TARGET_DOMAIN | gau --threads 5 > temp_recon/gau_raw.txt || true
         
         # 2. Waybackurls (Backup)
         echo "Executando Waybackurls..."
         echo $TARGET_DOMAIN | waybackurls > temp_recon/wayback_raw.txt || true
+
+        # 3. Katana (Active JS Crawling)
+        echo "Executando Katana..."
+        katana -u "https://$TARGET_DOMAIN" -d 2 -jc -o temp_recon/katana_raw.txt || true
         
-        # 3. Merge e Limpeza
-        cat temp_recon/gau_raw.txt temp_recon/wayback_raw.txt | sort -u > temp_recon/all_urls.txt
+        # 4. Merge e Limpeza
+        cat temp_recon/gau_raw.txt temp_recon/wayback_raw.txt temp_recon/katana_raw.txt | sort -u > temp_recon/all_urls.txt
         
-        # Filtro de extensões inúteis (imagens, css, etc)
-        grep -vE "\.(jpg|jpeg|gif|css|tif|tiff|png|ttf|woff|woff2|ico|pdf|svg|txt|js)$" temp_recon/all_urls.txt > temp_recon/clean_urls.txt || true
+        # 5. Filtros Sniper (V12)
+        # Limpar lixo estático (grep -vE)
+        grep -vE "\.(jpg|jpeg|gif|css|tif|tiff|png|ttf|woff|woff2|ico|pdf|svg|txt|js|xml)$" temp_recon/all_urls.txt > temp_recon/clean_urls.txt || true
         
-        echo "URLs encontradas: $(wc -l < temp_recon/clean_urls.txt)"
+        # Extrair parâmetros interessantes (Sniper)
+        grep -E "(\?|&)(id|page|user|token|key|admin|debug)=" temp_recon/clean_urls.txt > temp_recon/params_urls.txt || true
+        
+        echo "URLs Totais: $(wc -l < temp_recon/clean_urls.txt)"
+        echo "URLs com Parâmetros: $(wc -l < temp_recon/params_urls.txt)"
 
     - name: Process Data to JSON
       run: |
