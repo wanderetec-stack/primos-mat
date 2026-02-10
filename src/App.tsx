@@ -6,6 +6,7 @@ import CriptografiaArticle from './pages/CriptografiaArticle';
 import TeoriaNumerosArticle from './pages/TeoriaNumerosArticle';
 import PerformanceArticle from './pages/PerformanceArticle';
 import TelemetriaArticle from './pages/TelemetriaArticle';
+import NotFound from './pages/NotFound';
 import ReconDashboard from './pages/ReconDashboard';
 
 // Auto-Update Component

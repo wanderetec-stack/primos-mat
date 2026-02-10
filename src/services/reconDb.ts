@@ -1,15 +1,22 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Fallback interface for development/offline
+export interface RecoveredArticle {
+  url: string;
+  title: string;
+  source: string;
+}
+
 export interface ReconResult {
   lastScan: string;
   totalLinks: number;
   status: string;
-  recoveredArticles: Array<{
-    url: string;
-    title: string;
-    source: string;
-  }>;
+  recoveredArticles: RecoveredArticle[];
+}
+
+interface ScannedUrl {
+  url: string;
+  title: string;
+  source: string;
 }
 
 // Environment variables should be in .env.local
@@ -34,7 +41,7 @@ export const ReconService = {
           .limit(1)
           .single();
 
-        let detailedArticles: any[] = [];
+        let detailedArticles: RecoveredArticle[] = [];
         
         // Fetch detailed items from scanned_urls (The Archaeologist's Findings)
         const { data: scanItems } = await supabase
@@ -45,7 +52,7 @@ export const ReconService = {
           .limit(20);
 
         if (scanItems) {
-            detailedArticles = scanItems.map(item => ({
+            detailedArticles = scanItems.map((item: ScannedUrl) => ({
                 url: item.url,
                 title: item.title,
                 source: item.source

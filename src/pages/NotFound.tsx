@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { supabase } from '../services/reconDb';
-import { Terminal, ShieldAlert, Search, Home } from 'lucide-react';
+import { ShieldAlert, Search, Home } from 'lucide-react';
 
 const NotFound: React.FC = () => {
   const location = useLocation();

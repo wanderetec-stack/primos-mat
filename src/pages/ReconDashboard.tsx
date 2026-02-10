@@ -1,15 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { Shield, Lock, Activity, Globe, Database, FileText, AlertTriangle, Terminal } from 'lucide-react';
 
-import { ReconService } from '../services/reconDb';
+import { ReconService, supabase, ReconResult, RecoveredArticle } from '../services/reconDb';
+
+interface TrafficLog {
+  created_at: string;
+  url: string;
+  referrer: string;
+  user_agent: string;
+}
 
 const ReconDashboard: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [reconData, setReconData] = useState<any>(null);
-  const [trafficLogs, setTrafficLogs] = useState<any[]>([]);
+  const [reconData, setReconData] = useState<ReconResult | null>(null);
+  const [trafficLogs, setTrafficLogs] = useState<TrafficLog[]>([]);
 
   // Security: Prevent indexing
   useEffect(() => {
@@ -209,7 +216,7 @@ const ReconDashboard: React.FC = () => {
             Dossiês Prontos para Recriação
           </h3>
           <div className="space-y-3">
-            {reconData?.recoveredArticles?.map((article: any, index: number) => (
+            {reconData?.recoveredArticles?.map((article: RecoveredArticle, index: number) => (
               <div key={index} className="flex items-start justify-between bg-black/40 p-3 rounded border border-green-900/30 hover:border-green-500/30 transition-all cursor-pointer">
                 <div>
                   <p className="text-sm font-bold text-green-300">{article.title}</p>
