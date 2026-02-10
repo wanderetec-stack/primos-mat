@@ -21,9 +21,6 @@ export const generateSEOArticle = (n: bigint, isPrime: boolean, factors: string[
   const numInt = parseInt(numStr.substring(0, 15)); // Safe integer for math ops
   
   // Helpers
-  const isEven = n % 2n === 0n;
-  const sqrtApprox = Math.floor(Math.sqrt(Number(numStr.substring(0, 15)))) * Math.pow(10, Math.floor((numLen - 15)/2)); 
-  
   // 1. Title & Meta
   const title = isPrime 
     ? `Dossiê Completo: Por que o número ${formatNumber(n)} é um Primo Matemático?`

@@ -205,7 +205,7 @@ const Scanner: React.FC = () => {
     setAiInsight(null);
     
     // Simulate slight delay for "Scanner Effect"
-    setTimeout(() => {
+    setTimeout(async () => {
         const result = isPrime(targetNum);
         const seoArticle = generateSEOArticle(BigInt(targetNum), result.isPrime, result.factors, result.time);
         
@@ -219,14 +219,14 @@ const Scanner: React.FC = () => {
             number: targetNum,
             isPrime: result.isPrime,
             factors: result.factors,
-            executionTime: result.time
+            time: result.time
         });
       setAiInsight(insight);
       setResultMessage(result.isPrime ? "ENTIDADE PRIMA CONFIRMADA" : "ENTIDADE COMPOSTA DETECTADA");
       setStatus(result.isPrime ? 'prime' : 'composite');
       setExecutionTime(result.time);
 
-      saveDossier({
+      await saveDossier({
         number: targetNum,
         isPrime: result.isPrime,
         factors: result.factors,

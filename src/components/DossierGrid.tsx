@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { FileText, Clock, Hash, X, ChevronRight, Share2, Sparkles, Brain, BookOpen, Layers } from 'lucide-react';
-import { DossierEntry, getDossiers } from '../utils/dossierStore';
+import { DossierEntry, fetchDossiers } from '../utils/dossierStore';
 
 const DossierGrid: React.FC = () => {
   const [dossiers, setDossiers] = useState<DossierEntry[]>([]);
   const [selectedDossier, setSelectedDossier] = useState<DossierEntry | null>(null);
 
-  const loadDossiers = () => {
-    setDossiers(getDossiers());
+  const loadDossiers = async () => {
+    const data = await fetchDossiers();
+    setDossiers(data);
   };
 
   useEffect(() => {

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Shield, Lock, Activity, Globe, Database, FileText, AlertTriangle, Terminal } from 'lucide-react';
 
+import { ReconService } from '../services/reconDb';
+
 const ReconDashboard: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [username, setUsername] = useState('');
@@ -41,22 +43,12 @@ const ReconDashboard: React.FC = () => {
     }
   };
 
-  // Fetch real recon data
+  // Fetch real recon data (Hybrid DB)
   useEffect(() => {
     if (isAuthenticated) {
-      fetch('/data/recon_results.json')
-        .then(res => res.json())
+      ReconService.getLatestResults()
         .then(data => setReconData(data))
-        .catch(err => {
-          console.error('Failed to load recon data:', err);
-          // Fallback to initial state if fetch fails
-          setReconData({
-            lastScan: new Date().toISOString(),
-            totalLinks: 0,
-            status: 'Erro de Conexão / Arquivo não encontrado',
-            recoveredArticles: []
-          });
-        });
+        .catch(err => console.error('Dashboard Data Error:', err));
     }
   }, [isAuthenticated]);
 

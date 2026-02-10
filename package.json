@@ -9,11 +9,16 @@
     "seo:push": "node scripts/indexnow.js",
     "lint": "eslint .",
     "preview": "vite preview",
-    "render": "remotion render"
+    "render": "remotion render",
+    "db:push": "node scripts/push-recon-to-db.js",
+    "db:migrate": "node scripts/setup-db.js"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.95.3",
     "@tailwindcss/postcss": "^4.1.18",
+    "dotenv": "^17.2.4",
     "lucide-react": "^0.563.0",
+    "pg": "^8.18.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.13.0"

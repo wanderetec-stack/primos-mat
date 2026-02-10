@@ -20,6 +20,11 @@ jobs:
       with:
         go-version: '1.21'
 
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
     - name: Install Recon Tools
       run: |
         echo "Installing GAU..."
@@ -98,10 +103,29 @@ jobs:
         
         cat public/data/recon_results.json
 
-    - name: Commit Results
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Push Results to Database (Supabase)
+      if: success()
+      env:
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      run: npm run db:push
+      
+    - name: Commit and Push JSON Fallback
       run: |
-        git config --global user.name 'Recon Agent Bot'
+        git config --global user.name 'Recon Bot'
         git config --global user.email 'bot@primos.mat.br'
         git add public/data/recon_results.json
-        git commit -m "security(recon): auto-update scan results [skip ci]" || echo "No changes to commit"
+        git commit -m "Auto-update: Recon Scan Results [$(date)]" || exit 0
         git push
+
+    - name: Notify Telegram (Success)
+      if: success()
+      run: |
+        node scripts/notify-telegram.js "✅ RECON COMPLETO\n\nNovos Links Encontrados: $(wc -l < temp_recon/clean_urls.txt)\nPotenciais Alvos (Sniper): $(wc -l < temp_recon/params_urls.txt)\n\nRelatório atualizado no Dashboard." "SUCCESS"
+
+    - name: Notify Telegram (Failure)
+      if: failure()
+      run: |
+        node scripts/notify-telegram.js "🚨 FALHA NO RECON\n\nO agente de varredura encontrou um erro crítico durante a execução. Verifique os logs do GitHub Actions imediatamente." "ALERT"
