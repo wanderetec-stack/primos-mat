@@ -34,12 +34,31 @@ export const ReconService = {
           .limit(1)
           .single();
 
+        let detailedArticles: any[] = [];
+        
+        // Fetch detailed items from scanned_urls (The Archaeologist's Findings)
+        const { data: scanItems } = await supabase
+          .from('scanned_urls')
+          .select('*')
+          .eq('status', 'recuperado') // Only show successful recoveries
+          .order('created_at', { ascending: false })
+          .limit(20);
+
+        if (scanItems) {
+            detailedArticles = scanItems.map(item => ({
+                url: item.url,
+                title: item.title,
+                source: item.source
+            }));
+        }
+
         if (data && !error) {
           return {
             lastScan: data.created_at,
             totalLinks: data.total_links,
             status: data.status,
-            recoveredArticles: data.results_json
+            // Prioritize Real DB findings over the summary JSON if available
+            recoveredArticles: detailedArticles.length > 0 ? detailedArticles : data.results_json
           };
         }
         console.warn('Supabase returned error or no data, falling back to JSON:', error);

@@ -16,6 +16,8 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.95.3",
     "@tailwindcss/postcss": "^4.1.18",
+    "axios": "^1.13.5",
+    "cheerio": "^1.2.0",
     "dotenv": "^17.2.4",
     "lucide-react": "^0.563.0",
     "pg": "^8.18.0",
