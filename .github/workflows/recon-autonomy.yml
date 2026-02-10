@@ -1,0 +1,96 @@
+name: Recon Autonomy Agent
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Executa diariamente à meia-noite
+  workflow_dispatch: # Permite execução manual
+
+jobs:
+  recon-mission:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Permissão para commitar os resultados
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Setup Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.21'
+
+    - name: Install Recon Tools
+      run: |
+        echo "Installing GAU..."
+        go install github.com/lc/gau/v2/cmd/gau@latest
+        echo "Installing Waybackurls..."
+        go install github.com/tomnomnom/waybackurls@latest
+        echo "Installing Hakrawler..."
+        go install github.com/hakluke/hakrawler@latest
+        # Adicionar ao PATH
+        export PATH=$PATH:$(go env GOPATH)/bin
+        echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
+
+    - name: Run Deep Scan
+      env:
+        TARGET_DOMAIN: "primos.mat.br"
+      run: |
+        mkdir -p temp_recon
+        echo "Iniciando varredura passiva em $TARGET_DOMAIN..."
+        
+        # 1. GAU (Get All Urls)
+        echo "Executando GAU..."
+        echo $TARGET_DOMAIN | gau --threads 5 > temp_recon/gau_raw.txt || true
+        
+        # 2. Waybackurls (Backup)
+        echo "Executando Waybackurls..."
+        echo $TARGET_DOMAIN | waybackurls > temp_recon/wayback_raw.txt || true
+        
+        # 3. Merge e Limpeza
+        cat temp_recon/gau_raw.txt temp_recon/wayback_raw.txt | sort -u > temp_recon/all_urls.txt
+        
+        # Filtro de extensões inúteis (imagens, css, etc)
+        grep -vE "\.(jpg|jpeg|gif|css|tif|tiff|png|ttf|woff|woff2|ico|pdf|svg|txt|js)$" temp_recon/all_urls.txt > temp_recon/clean_urls.txt || true
+        
+        echo "URLs encontradas: $(wc -l < temp_recon/clean_urls.txt)"
+
+    - name: Process Data to JSON
+      run: |
+        # Script simples para converter a lista de URLs em JSON estruturado
+        # Em um cenário real, usaríamos um script Python/Node mais robusto para extrair títulos via requests
+        
+        mkdir -p public/data
+        
+        echo "{" > public/data/recon_results.json
+        echo "  \"lastScan\": \"$(date -u +"%Y-%m-%dT%H:%M:%SZ")\"," >> public/data/recon_results.json
+        echo "  \"totalLinks\": $(wc -l < temp_recon/clean_urls.txt)," >> public/data/recon_results.json
+        echo "  \"status\": \"Ativo\"," >> public/data/recon_results.json
+        echo "  \"recoveredArticles\": [" >> public/data/recon_results.json
+        
+        # Pega as primeiras 20 URLs como exemplo/amostra para o JSON
+        count=0
+        while read p; do
+          if [ $count -gt 0 ]; then
+            echo "," >> public/data/recon_results.json
+          fi
+          # Escapar aspas duplas na URL
+          clean_url=$(echo "$p" | sed 's/"/\\"/g')
+          # Simular fonte baseada na ferramenta (apenas para demo, na real viria do output)
+          echo "    { \"url\": \"$clean_url\", \"title\": \"Recuperado via Automação\", \"source\": \"Wayback Machine\" }" >> public/data/recon_results.json
+          count=$((count+1))
+          if [ $count -eq 20 ]; then break; fi
+        done < temp_recon/clean_urls.txt
+        
+        echo "  ]" >> public/data/recon_results.json
+        echo "}" >> public/data/recon_results.json
+        
+        cat public/data/recon_results.json
+
+    - name: Commit Results
+      run: |
+        git config --global user.name 'Recon Agent Bot'
+        git config --global user.email 'bot@primos.mat.br'
+        git add public/data/recon_results.json
+        git commit -m "security(recon): auto-update scan results [skip ci]" || echo "No changes to commit"
+        git push

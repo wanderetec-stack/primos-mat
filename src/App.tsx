@@ -6,6 +6,7 @@ import CriptografiaArticle from './pages/CriptografiaArticle';
 import TeoriaNumerosArticle from './pages/TeoriaNumerosArticle';
 import PerformanceArticle from './pages/PerformanceArticle';
 import TelemetriaArticle from './pages/TelemetriaArticle';
+import ReconDashboard from './pages/ReconDashboard';
 
 // Auto-Update Component
 const AutoUpdater: React.FC = () => {
@@ -69,6 +70,7 @@ const AppContent: React.FC = () => {
         <Route path="/teoria-dos-numeros-primos" element={<TeoriaNumerosArticle />} />
         <Route path="/engenharia-performance-web" element={<PerformanceArticle />} />
         <Route path="/telemetria-sistema" element={<TelemetriaArticle />} />
+        <Route path="/gestao-recon" element={<ReconDashboard />} />
       </Routes>
     </Layout>
   );
