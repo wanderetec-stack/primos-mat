@@ -59,7 +59,19 @@ const AutoUpdater: React.FC = () => {
 // Wrapper component to access useLocation hook
 const AppContent: React.FC = () => {
   const location = useLocation();
+  const isReconPage = location.pathname === '/gestao-recon';
   
+  if (isReconPage) {
+    return (
+      <>
+        <AutoUpdater />
+        <Routes>
+          <Route path="/gestao-recon" element={<ReconDashboard />} />
+        </Routes>
+      </>
+    );
+  }
+
   return (
     <Layout currentPage={location.pathname}>
       <AutoUpdater />
@@ -70,7 +82,6 @@ const AppContent: React.FC = () => {
         <Route path="/teoria-dos-numeros-primos" element={<TeoriaNumerosArticle />} />
         <Route path="/engenharia-performance-web" element={<PerformanceArticle />} />
         <Route path="/telemetria-sistema" element={<TelemetriaArticle />} />
-        <Route path="/gestao-recon" element={<ReconDashboard />} />
       </Routes>
     </Layout>
   );
