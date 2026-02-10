@@ -9,6 +9,7 @@ const ReconDashboard: React.FC = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [reconData, setReconData] = useState<any>(null);
+  const [trafficLogs, setTrafficLogs] = useState<any[]>([]);
 
   // Security: Prevent indexing
   useEffect(() => {
@@ -49,6 +50,17 @@ const ReconDashboard: React.FC = () => {
       ReconService.getLatestResults()
         .then(data => setReconData(data))
         .catch(err => console.error('Dashboard Data Error:', err));
+
+      if (supabase) {
+        supabase
+          .from('traffic_logs')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(10)
+          .then(({ data }) => {
+            if (data) setTrafficLogs(data);
+          });
+      }
     }
   }, [isAuthenticated]);
 
@@ -231,6 +243,46 @@ const ReconDashboard: React.FC = () => {
             <p>[READY] Sistema aguardando instruções ou ciclo automático.</p>
             <p className="animate-pulse">_</p>
           </div>
+        </div>
+      </div>
+
+      {/* Traffic Analysis (Honeypot Data) */}
+      <div className="mt-6 bg-gray-900/50 border border-green-900/50 rounded p-6">
+        <h3 className="text-lg font-bold mb-4 flex items-center gap-2 border-b border-green-900/50 pb-2">
+          <AlertTriangle className="w-5 h-5 text-yellow-500" />
+          Tráfego 404 Detectado (Honeypot Live)
+        </h3>
+        <div className="overflow-x-auto">
+          <table className="w-full text-xs text-left">
+            <thead>
+              <tr className="text-green-700 border-b border-green-900/30">
+                <th className="pb-2">HORA</th>
+                <th className="pb-2">ROTA ALVO</th>
+                <th className="pb-2">ORIGEM (REFERRER)</th>
+                <th className="pb-2">AGENTE</th>
+              </tr>
+            </thead>
+            <tbody className="font-mono text-green-400">
+              {trafficLogs.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="py-4 text-center text-gray-500 italic">
+                    Nenhuma anomalia detectada nas últimas 24h.
+                  </td>
+                </tr>
+              ) : (
+                trafficLogs.map((log, i) => (
+                  <tr key={i} className="border-b border-green-900/10 hover:bg-green-900/20 transition-colors">
+                    <td className="py-2 text-green-600">{new Date(log.created_at).toLocaleTimeString()}</td>
+                    <td className="py-2 text-red-400 font-bold">{log.url}</td>
+                    <td className="py-2 text-blue-400">{log.referrer}</td>
+                    <td className="py-2 opacity-50 truncate max-w-[200px]" title={log.user_agent}>
+                      {log.user_agent}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

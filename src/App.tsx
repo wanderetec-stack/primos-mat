@@ -82,6 +82,7 @@ const AppContent: React.FC = () => {
         <Route path="/teoria-dos-numeros-primos" element={<TeoriaNumerosArticle />} />
         <Route path="/engenharia-performance-web" element={<PerformanceArticle />} />
         <Route path="/telemetria-sistema" element={<TelemetriaArticle />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Layout>
   );
