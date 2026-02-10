@@ -9,11 +9,18 @@ const AcervoPreview: React.FC = () => {
 
   useEffect(() => {
     const fetchArticles = async () => {
-      // Get all published articles
-      const data = await ReconService.getPublishedArticles();
-      // Take the top 6 for the preview
-      setArticles(data.slice(0, 6));
-      setLoading(false);
+      try {
+        // Get all published articles
+        const data = await ReconService.getPublishedArticles();
+        // Take the top 6 for the preview
+        if (data && data.length > 0) {
+            setArticles(data.slice(0, 6));
+        }
+      } catch (err) {
+        console.error("AcervoPreview error:", err);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchArticles();
@@ -21,6 +28,7 @@ const AcervoPreview: React.FC = () => {
 
   // Generate a deterministic color gradient based on the article ID
   const getGradient = (id: string) => {
+    if (!id) return 'from-gray-700 to-gray-900';
     const colors = [
       'from-green-400 to-blue-500',
       'from-purple-500 to-pink-500',
@@ -39,15 +47,13 @@ const AcervoPreview: React.FC = () => {
     return colors[Math.abs(hash) % colors.length];
   };
 
-  if (loading) return null;
-
-  // Se não houver artigos, mostramos uma mensagem discreta ou nada
-  // Mas agora com o fallback, isso raramente deve acontecer
-  if (articles.length === 0) {
+  if (loading || articles.length === 0) {
     return (
-      <section className="py-12 relative z-10 border-t border-white/5">
-        <div className="text-center text-gray-500">
-          <p>Carregando acervo recuperado...</p>
+      <section className="py-12 relative z-10 border-t border-white/5 min-h-[200px] flex items-center justify-center">
+        <div className="text-center text-gray-400 animate-pulse">
+          <p className="font-mono text-sm">
+            {loading ? "Carregando acervo recuperado..." : "Nenhum artigo disponível no momento."}
+          </p>
         </div>
       </section>
     );

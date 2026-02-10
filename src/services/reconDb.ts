@@ -1,6 +1,26 @@
 import { createClient } from '@supabase/supabase-js';
 import fallbackData from '../data/fallback_articles.json';
 
+// SAFETY NET: Hardcoded minimal data in case JSON import fails in production
+const SAFETY_NET_ARTICLES: DraftArticle[] = [
+  {
+    id: "28e392aa-175f-4c48-8be3-f1055c4c17e4",
+    original_url: "https://primos.mat.br/example-recovery-test",
+    title: "Example Domain (Safety Net)",
+    status: "published",
+    created_at: "2026-02-10T13:10:31.79248+00:00",
+    content_markdown: "Fallback content."
+  },
+  {
+    id: "c4676303-83f1-4d25-ab7c-ac88887d359e",
+    original_url: "https://primos.mat.br/50mi_en.html",
+    title: "First 50.000.000 prime numbers",
+    status: "published",
+    created_at: "2026-02-10T14:12:17.605866+00:00",
+    content_markdown: "Fallback content."
+  }
+];
+
 export interface RecoveredArticle {
   url: string;
   title: string;
@@ -162,8 +182,18 @@ export const ReconService = {
     // 2. Fallback to Local JSON if empty or error
     if (articles.length === 0) {
       console.warn('ReconService: Using local fallback data (Offline Mode)');
-      // Cast the JSON data to match the interface
-      articles = fallbackData as unknown as DraftArticle[];
+      try {
+        // Cast the JSON data to match the interface
+        articles = fallbackData as unknown as DraftArticle[];
+      } catch (e) {
+        console.error('ReconService: JSON import failed, using safety net', e);
+      }
+
+      // 3. Safety Net if JSON failed or was empty
+      if (!articles || articles.length === 0) {
+        console.warn('ReconService: Using safety net data');
+        articles = SAFETY_NET_ARTICLES;
+      }
     }
       
     return articles;

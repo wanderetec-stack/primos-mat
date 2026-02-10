@@ -10,9 +10,14 @@ const AcervoIndex: React.FC = () => {
 
   useEffect(() => {
     const fetchArticles = async () => {
-      const data = await ReconService.getPublishedArticles();
-      setArticles(data);
-      setLoading(false);
+      try {
+        const data = await ReconService.getPublishedArticles();
+        if (data) setArticles(data);
+      } catch (e) {
+        console.error("AcervoIndex error:", e);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchArticles();
@@ -25,6 +30,7 @@ const AcervoIndex: React.FC = () => {
 
   // Generate a deterministic color gradient based on the article ID
   const getGradient = (id: string) => {
+    if (!id) return 'from-gray-700 to-gray-900';
     const colors = [
       'from-green-400 to-blue-500',
       'from-purple-500 to-pink-500',
