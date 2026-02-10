@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ReconService, DraftArticle } from '../services/reconDb';
 import { BookOpen, Calendar, ArrowRight, Search, FileText } from 'lucide-react';
+import { safeGetPathname } from '../utils/urlUtils';
 
 const AcervoIndex: React.FC = () => {
   const [articles, setArticles] = useState<DraftArticle[]>([]);
@@ -95,8 +96,8 @@ const AcervoIndex: React.FC = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                 {filteredArticles.map((article) => (
                     <Link 
-                        key={article.id} 
-                        to={new URL(article.original_url).pathname}
+                        key={article.id || Math.random().toString()} 
+                        to={safeGetPathname(article.original_url)}
                         className="group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col h-full"
                     >
                         {/* Generated Image/Pattern Area */}

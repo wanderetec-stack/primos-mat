@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ReconService, DraftArticle } from '../services/reconDb';
 import { BookOpen, Calendar, ArrowRight, FileText } from 'lucide-react';
+import { safeGetPathname } from '../utils/urlUtils';
 
 const AcervoPreview: React.FC = () => {
   const [articles, setArticles] = useState<DraftArticle[]>([]);
@@ -79,8 +80,8 @@ const AcervoPreview: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {articles.map((article) => (
           <Link 
-            key={article.id} 
-            to={new URL(article.original_url).pathname}
+            key={article.id || Math.random().toString()} 
+            to={safeGetPathname(article.original_url)}
             className="group bg-[#0a0a0a] border border-white/10 rounded-xl overflow-hidden hover:border-green-500/50 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(34,197,94,0.2)] flex flex-col h-full"
           >
              {/* Generated Image Area - Same style as AcervoIndex but adapted for Dark Mode Home */}
