@@ -25,6 +25,7 @@ export default defineConfig({
       deleteOriginFile: false
     }),
     */
+    /*
     obfuscatorPlugin({
       global: true,
       options: {
@@ -58,6 +59,7 @@ export default defineConfig({
         unicodeEscapeSequence: false
       }
     })
+    */
   ],
   base: './',
   build: {

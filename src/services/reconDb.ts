@@ -1,5 +1,4 @@
 import { createClient } from '@supabase/supabase-js';
-import fallbackData from '../data/fallback_articles.json';
 
 // SAFETY NET: Hardcoded minimal data in case JSON import fails in production
 const SAFETY_NET_ARTICLES: DraftArticle[] = [
@@ -179,14 +178,19 @@ export const ReconService = {
       }
     }
 
-    // 2. Fallback to Local JSON if empty or error
+    // 2. Fallback to Local JSON (via fetch) if empty or error
     if (articles.length === 0) {
       console.warn('ReconService: Using local fallback data (Offline Mode)');
       try {
-        // Cast the JSON data to match the interface
-        articles = fallbackData as unknown as DraftArticle[];
+        // Fetch from public folder instead of bundled import
+        const response = await fetch('/fallback_articles.json');
+        if (response.ok) {
+           articles = await response.json() as DraftArticle[];
+        } else {
+           console.error('ReconService: JSON fetch failed', response.status);
+        }
       } catch (e) {
-        console.error('ReconService: JSON import failed, using safety net', e);
+        console.error('ReconService: JSON fetch error', e);
       }
 
       // 3. Safety Net if JSON failed or was empty
