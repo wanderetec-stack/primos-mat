@@ -112,7 +112,7 @@ const AcervoPreview: React.FC = () => {
                         {article.title}
                     </h3>
                     <p className="text-xs text-gray-500 mb-4 font-mono truncate">
-                        {new URL(article.original_url).pathname}
+                        {safeGetPathname(article.original_url)}
                     </p>
                 </div>
                 
