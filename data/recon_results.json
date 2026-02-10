@@ -1,6 +1,17 @@
 {
-  "lastScan": "2026-02-09T00:00:00Z",
-  "totalLinks": 0,
-  "status": "Inicializado",
-  "recoveredArticles": []
+  "lastScan": "2026-02-10T12:20:00Z",
+  "totalLinks": 2,
+  "status": "Varredura Concluída",
+  "recoveredArticles": [
+    {
+      "url": "http://www.primos.mat.br/",
+      "title": "primos.mat.br | 522: Connection timed out",
+      "source": "Google Index"
+    },
+    {
+      "url": "http://varejaodosprimos.com.br",
+      "title": "Varejao Dos Primos",
+      "source": "LinkedIn Backlink"
+    }
+  ]
 }
