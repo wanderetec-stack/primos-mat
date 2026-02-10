@@ -9,6 +9,10 @@ const __dirname = dirname(__filename)
 
 // https://vite.dev/config/
 export default defineConfig({
+  server: {
+    allowedHosts: true,
+    host: true // Listen on all addresses
+  },
   plugins: [
     react(),
     /*
