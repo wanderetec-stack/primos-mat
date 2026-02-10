@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { FileText, Clock, Hash, X, ChevronRight, Share2, Sparkles, Brain } from 'lucide-react';
-import { DossierEntry, getDossiers, clearDossiers } from '../utils/dossierStore';
+import { FileText, Clock, Hash, X, ChevronRight, Share2, Sparkles, Brain, BookOpen, Layers } from 'lucide-react';
+import { DossierEntry, getDossiers } from '../utils/dossierStore';
 
 const DossierGrid: React.FC = () => {
   const [dossiers, setDossiers] = useState<DossierEntry[]>([]);
@@ -23,64 +23,73 @@ const DossierGrid: React.FC = () => {
       <div className="flex items-center justify-between mb-8">
         <div>
             <h2 className="text-3xl font-bold font-mono text-white mb-2 flex items-center gap-2">
-            <FileText className="text-purple-400" />
-            Dossiê Matemático
+            <BookOpen className="text-purple-400" />
+            Biblioteca de Dossiês
             </h2>
             <p className="text-gray-400 text-sm font-mono">
-            Arquivo de análises geradas em tempo real ({dossiers.length} registros)
+            Acervo de artigos matemáticos gerados ({dossiers.length} volumes)
             </p>
         </div>
-        <button 
-            onClick={clearDossiers}
-            className="text-xs text-red-400 hover:text-red-300 font-mono border border-red-500/30 px-3 py-1 rounded hover:bg-red-500/10 transition-colors"
-        >
-            LIMPAR HISTÓRICO
-        </button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {dossiers.map((entry) => (
-          <div 
+          <article 
             key={entry.id}
             onClick={() => setSelectedDossier(entry)}
-            className="group cursor-pointer glass-panel p-0 rounded-xl overflow-hidden hover:border-purple-500/50 transition-all duration-300 hover:-translate-y-1"
+            className="group cursor-pointer bg-[#0a0a0a] border border-white/10 hover:border-purple-500/50 rounded-xl overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(168,85,247,0.2)]"
           >
-            {/* "Image" Placeholder - Generated Art */}
-            <div className={`h-32 w-full relative overflow-hidden ${entry.isPrime ? 'bg-gradient-to-br from-primary/20 to-blue-600/20' : 'bg-gradient-to-br from-red-500/20 to-orange-600/20'}`}>
-                <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-5xl font-bold font-mono text-white/10 group-hover:text-white/20 transition-colors tracking-tighter">
+            {/* Book Cover Style Visual */}
+            <div className={`h-48 w-full relative overflow-hidden ${entry.isPrime ? 'bg-gradient-to-br from-slate-900 via-blue-900/40 to-slate-900' : 'bg-gradient-to-br from-slate-900 via-red-900/40 to-slate-900'}`}>
+                {/* Abstract Geometric Pattern (CSS generated) */}
+                <div className="absolute inset-0 opacity-20" style={{ 
+                    backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.15) 1px, transparent 0)',
+                    backgroundSize: '24px 24px' 
+                }}></div>
+                
+                {/* Center Badge/Symbol */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-6">
+                    <div className={`w-20 h-20 rounded-full flex items-center justify-center mb-4 border-2 ${entry.isPrime ? 'border-primary/30 bg-primary/5 text-primary' : 'border-red-500/30 bg-red-500/5 text-red-400'} backdrop-blur-md shadow-2xl group-hover:scale-110 transition-transform duration-500`}>
+                        <Hash size={32} />
+                    </div>
+                    <span className="text-4xl font-bold font-mono text-white tracking-tighter shadow-black drop-shadow-lg">
                         {entry.number}
                     </span>
                 </div>
-                <div className="absolute bottom-3 right-3">
+
+                {/* Status Badge */}
+                <div className="absolute top-4 right-4">
                     {entry.isPrime ? (
-                        <span className="bg-primary/20 text-primary text-xs font-bold px-2 py-1 rounded border border-primary/30 shadow-[0_0_10px_rgba(0,255,127,0.2)]">PRIMO</span>
+                        <span className="bg-primary/10 backdrop-blur-md text-primary text-[10px] font-bold px-3 py-1 rounded-full border border-primary/20 flex items-center gap-1">
+                            <Sparkles size={10} /> PRIMO
+                        </span>
                     ) : (
-                        <span className="bg-red-500/20 text-red-400 text-xs font-bold px-2 py-1 rounded border border-red-500/30">COMPOSTO</span>
+                        <span className="bg-red-500/10 backdrop-blur-md text-red-400 text-[10px] font-bold px-3 py-1 rounded-full border border-red-500/20 flex items-center gap-1">
+                            <Layers size={10} /> COMPOSTO
+                        </span>
                     )}
-                </div>
-                <div className="absolute top-3 left-3 text-white/50 text-xs font-mono flex items-center gap-1">
-                    <Clock size={12} />
-                    {new Date(entry.timestamp).toLocaleTimeString()}
                 </div>
             </div>
 
-            <div className="p-5">
-                <h3 className="text-xl font-bold text-white mb-2 font-mono flex items-center gap-2">
-                    <Hash size={18} className="text-purple-400" />
-                    Entidade #{entry.number}
+            <div className="p-6 border-t border-white/5">
+                <h3 className="text-lg font-bold text-white mb-2 font-mono leading-tight group-hover:text-purple-400 transition-colors">
+                    Dossiê Matemático do Número {entry.number}
                 </h3>
-                <p className="text-sm text-gray-400 line-clamp-2 mb-4 font-mono h-10">
-                    {entry.aiInsight.message}
+                <p className="text-xs text-gray-500 mb-4 font-mono flex items-center gap-2">
+                    <Clock size={12} />
+                    Gerado em {new Date(entry.timestamp).toLocaleDateString()}
                 </p>
-                <div className="flex items-center justify-between text-xs text-gray-500 font-mono border-t border-white/5 pt-3">
-                    <span>Processado em {entry.executionTime.toFixed(2)}ms</span>
-                    <span className="flex items-center gap-1 text-purple-400 group-hover:translate-x-1 transition-transform">
-                        LER DOSSIÊ <ChevronRight size={14} />
+                
+                <div className="flex items-center justify-between mt-4">
+                    <span className="text-xs text-gray-600 font-mono bg-white/5 px-2 py-1 rounded">
+                        VOLUME #{entry.id.slice(0,4)}
+                    </span>
+                    <span className="flex items-center gap-1 text-sm font-bold text-white group-hover:translate-x-1 transition-transform">
+                        LER ARTIGO <ChevronRight size={16} className="text-purple-500" />
                     </span>
                 </div>
             </div>
-          </div>
+          </article>
         ))}
       </div>
 
