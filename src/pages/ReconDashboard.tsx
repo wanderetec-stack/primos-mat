@@ -272,18 +272,26 @@ const ReconDashboard: React.FC = () => {
         <div className="bg-gray-900/50 border border-green-900/50 rounded p-6 lg:col-span-2">
           <h3 className="text-lg font-bold mb-4 flex items-center gap-2 border-b border-green-900/50 pb-2">
             <FileText className="w-5 h-5 text-blue-400" />
-            <span className="text-blue-400">Protocolo Lázaro: Rascunhos IA (Beta)</span>
+            <span className="text-blue-400">Protocolo Lázaro: Gestão de Conteúdo</span>
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
              {reconData?.drafts?.length === 0 ? (
                <p className="text-gray-500 italic text-sm p-4">Nenhum rascunho gerado ainda.</p>
              ) : (
                reconData?.drafts?.map((draft: DraftArticle) => (
-                 <div key={draft.id} className="bg-blue-900/10 border border-blue-900/30 p-4 rounded hover:border-blue-500/50 transition-all group">
+                 <div key={draft.id} className={`bg-blue-900/10 border ${draft.status === 'published' ? 'border-green-500/50' : 'border-blue-900/30'} p-4 rounded hover:border-blue-500/50 transition-all group`}>
                    <div className="flex justify-between items-start mb-2">
-                     <h4 className="text-blue-300 font-bold text-sm group-hover:text-blue-200">{draft.title}</h4>
-                     <span className="text-[10px] bg-blue-900/30 px-2 py-1 rounded text-blue-400 border border-blue-900 uppercase">
-                       {draft.status}
+                     <h4 className="text-blue-300 font-bold text-sm group-hover:text-blue-200 line-clamp-2">{draft.title}</h4>
+                     <span className={`text-[10px] px-2 py-1 rounded border uppercase font-bold flex items-center gap-1 ${
+                       draft.status === 'published' 
+                         ? 'bg-green-900/30 text-green-400 border-green-900' 
+                         : 'bg-yellow-900/30 text-yellow-400 border-yellow-900'
+                     }`}>
+                       {draft.status === 'published' ? (
+                         <><Globe size={10} /> PUBLICADO</>
+                       ) : (
+                         <><Activity size={10} /> PENDENTE</>
+                       )}
                      </span>
                    </div>
                    <p className="text-xs text-blue-500/70 font-mono mb-3 truncate">{draft.original_url}</p>
@@ -293,7 +301,7 @@ const ReconDashboard: React.FC = () => {
                        onClick={() => navigate(`/acervo/draft/${draft.id}`)}
                        className="text-blue-400 hover:text-white underline"
                      >
-                       Editar Rascunho
+                       {draft.status === 'published' ? 'Editar / Repubblicar' : 'Revisar e Publicar'}
                      </button>
                    </div>
                  </div>

@@ -1,0 +1,263 @@
+{
+  "timestamp": "2026-02-10T15:28:07.988Z",
+  "total_scanned_capacity": "20,000,000+",
+  "sources": [
+    "Hacker News",
+    "Reddit",
+    "Wayback Machine",
+    "Common Crawl"
+  ],
+  "new_findings": 3823,
+  "details": [
+    {
+      "url": "http://primos.mat.br/",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/2T.html",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://www.primos.mat.br/2T_en.html",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/50mi.html",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://www.primos.mat.br:80/50mi_en.html",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/Ate100G.html",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://www.primos.mat.br/Ate100G_en.html",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://www.primos.mat.br/dados/2T_part1.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part10.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part100.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part101.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part102.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part103.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part104.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part105.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part106.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part107.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part108.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part109.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part11.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part110.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part111.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part112.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part113.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part114.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part115.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part116.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part117.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part118.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part119.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part12.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part120.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part121.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part122.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part123.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part124.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part125.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part126.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part127.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part128.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part129.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part13.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part130.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part131.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part132.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part133.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part134.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part135.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part136.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    },
+    {
+      "url": "http://primos.mat.br/dados/2T_part137.7z",
+      "title": "Wayback Archive",
+      "source": "Wayback Machine (Deep Scan)"
+    }
+  ]
+}

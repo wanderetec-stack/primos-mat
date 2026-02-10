@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Scanner from '../components/Scanner';
+import AcervoPreview from '../components/AcervoPreview';
 import { Database, Zap, Lock } from 'lucide-react';
 import UlamSpiral from '../components/UlamSpiral';
 import DailyPrime from '../components/DailyPrime';

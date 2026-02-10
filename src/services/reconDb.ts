@@ -15,6 +15,7 @@ export interface DraftArticle {
   status: string;
   created_at: string;
   content_markdown?: string;
+  meta_description?: string;
 }
 
 export interface ReconResult {

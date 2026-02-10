@@ -18,6 +18,11 @@ const AcervoIndex: React.FC = () => {
     fetchArticles();
   }, []);
 
+  const filteredArticles = articles.filter(article => 
+    article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (article.meta_description && article.meta_description.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
+
   // Generate a deterministic color gradient based on the article ID
   const getGradient = (id: string) => {
     const colors = [
