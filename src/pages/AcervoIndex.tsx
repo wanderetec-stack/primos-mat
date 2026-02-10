@@ -18,27 +18,42 @@ const AcervoIndex: React.FC = () => {
     fetchArticles();
   }, []);
 
-  const filteredArticles = articles.filter(article => 
-    article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    article.original_url.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Generate a deterministic color gradient based on the article ID
+  const getGradient = (id: string) => {
+    const colors = [
+      'from-green-400 to-blue-500',
+      'from-purple-500 to-pink-500',
+      'from-yellow-400 to-orange-500',
+      'from-red-500 to-pink-500',
+      'from-indigo-500 to-purple-500',
+      'from-blue-400 to-teal-500',
+      'from-green-500 to-emerald-700',
+      'from-gray-700 to-gray-900',
+    ];
+    // Simple hash
+    let hash = 0;
+    for (let i = 0; i < id.length; i++) {
+      hash = id.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return colors[Math.abs(hash) % colors.length];
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800 font-sans">
       {/* Header */}
       <header className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-10">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
             <Link to="/" className="text-green-700 font-bold text-xl hover:text-green-800 transition-colors flex items-center gap-2">
                 <BookOpen className="w-6 h-6" />
                 O Acervo
             </Link>
             
-            <div className="hidden md:flex items-center bg-gray-100 rounded-full px-4 py-2 w-64 border border-gray-200 focus-within:border-green-500 focus-within:ring-1 focus-within:ring-green-500 transition-all">
-                <Search className="w-4 h-4 text-gray-400 mr-2" />
+            <div className="flex items-center bg-gray-100 rounded-full px-4 py-2 w-full md:w-96 border border-gray-200 focus-within:border-green-500 focus-within:ring-1 focus-within:ring-green-500 transition-all shadow-inner">
+                <Search className="w-5 h-5 text-gray-400 mr-3" />
                 <input 
                     type="text" 
-                    placeholder="Buscar artigos..." 
-                    className="bg-transparent border-none outline-none text-sm w-full placeholder-gray-400 text-gray-700"
+                    placeholder="Pesquisar no acervo..." 
+                    className="bg-transparent border-none outline-none text-sm w-full placeholder-gray-500 text-gray-700"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -47,68 +62,64 @@ const AcervoIndex: React.FC = () => {
       </header>
 
       {/* Hero Section */}
-      <div className="bg-green-900 text-white py-16 px-6">
-        <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-extrabold mb-4 tracking-tight">
+      <div className="bg-gradient-to-r from-green-900 to-green-800 text-white py-20 px-6 shadow-lg">
+        <div className="max-w-5xl mx-auto text-center">
+            <h1 className="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight drop-shadow-md">
                 Matemática Recuperada
             </h1>
-            <p className="text-green-100 text-lg max-w-2xl mx-auto leading-relaxed">
-                Um projeto de preservação digital para resgatar o conhecimento matemático perdido do domínio <em>primos.mat.br</em>.
+            <p className="text-green-100 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-light">
+                Um projeto de preservação digital dedicado a resgatar o conhecimento matemático perdido do domínio <em>primos.mat.br</em>.
             </p>
         </div>
       </div>
 
       {/* Main Content */}
-      <main className="max-w-6xl mx-auto px-6 py-12">
+      <main className="max-w-7xl mx-auto px-6 py-12">
         {loading ? (
-           <div className="flex flex-col items-center justify-center py-20 text-gray-400">
-               <div className="w-10 h-10 border-4 border-green-600 border-t-transparent rounded-full animate-spin mb-4"></div>
-               <p>Carregando acervo...</p>
+           <div className="flex flex-col items-center justify-center py-32 text-gray-400">
+               <div className="w-12 h-12 border-4 border-green-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+               <p className="text-lg font-medium text-gray-500">Carregando o acervo...</p>
            </div>
         ) : filteredArticles.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                 {filteredArticles.map((article) => (
                     <Link 
                         key={article.id} 
-                        // Link to the relative path of the original URL (which our 404 handler intercepts)
-                        // OR we can create a dedicated /acervo/read/:id route.
-                        // For SEO "recovery", linking to the original path is better IF we intercept it.
-                        // But for a stable "Blog", a dedicated route is safer.
-                        // Let's use the intercepted path approach for "Real SEO".
-                        // Wait, React Router Link to absolute URL? No.
-                        // We need to parse the path from original_url.
                         to={new URL(article.original_url).pathname}
-                        className="group bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-xl hover:border-green-200 transition-all duration-300 overflow-hidden flex flex-col"
+                        className="group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col h-full"
                     >
-                        <div className="h-48 bg-gray-100 relative overflow-hidden">
-                             {/* Abstract Pattern Generation based on ID */}
-                             <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-green-100 opacity-50"></div>
-                             <div className="absolute inset-0 flex items-center justify-center text-green-900/10 transform group-hover:scale-110 transition-transform duration-500">
-                                <FileText className="w-24 h-24" />
+                        {/* Generated Image/Pattern Area */}
+                        <div className={`h-48 relative overflow-hidden bg-gradient-to-br ${getGradient(article.id)}`}>
+                             <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-300"></div>
+                             {/* Mathematical Decoration */}
+                             <div className="absolute -bottom-6 -right-6 text-white/20 transform rotate-12 group-hover:scale-110 group-hover:rotate-0 transition-all duration-500">
+                                <FileText className="w-32 h-32" />
+                             </div>
+                             
+                             <div className="absolute top-4 left-4">
+                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-white/20 text-white backdrop-blur-sm border border-white/10">
+                                   Recuperado
+                                </span>
                              </div>
                         </div>
                         
-                        <div className="p-6 flex-1 flex flex-col">
-                            <div className="flex items-center gap-2 text-xs text-green-600 font-bold uppercase tracking-wider mb-3">
-                                <span className="w-2 h-2 rounded-full bg-green-500"></span>
-                                Recuperado
+                        <div className="p-6 flex-1 flex flex-col justify-between">
+                            <div>
+                                <h2 className="text-lg font-bold text-gray-900 mb-3 group-hover:text-green-700 transition-colors line-clamp-2 leading-tight">
+                                    {article.title}
+                                </h2>
+                                <p className="text-xs text-gray-500 mb-4 font-mono truncate">
+                                    {new URL(article.original_url).pathname}
+                                </p>
                             </div>
                             
-                            <h2 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-green-700 transition-colors line-clamp-2">
-                                {article.title}
-                            </h2>
-                            
-                            <p className="text-gray-500 text-sm line-clamp-3 mb-6 flex-1">
-                                {article.content_markdown?.substring(0, 150).replace(/[#*_`]/g, '')}...
-                            </p>
-                            
-                            <div className="flex items-center justify-between pt-4 border-t border-gray-100 text-sm text-gray-400">
-                                <span className="flex items-center gap-1">
+                            <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-50">
+                                <span className="text-xs text-gray-400 flex items-center gap-1">
                                     <Calendar className="w-3 h-3" />
-                                    {new Date(article.created_at).toLocaleDateString()}
+                                    {new Date(article.created_at).toLocaleDateString('pt-BR')}
                                 </span>
-                                <span className="flex items-center gap-1 text-green-600 font-medium group-hover:translate-x-1 transition-transform">
-                                    Ler Artigo <ArrowRight className="w-3 h-3" />
+                                <span className="text-green-600 text-sm font-semibold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                                    Ler Artigo <ArrowRight className="w-4 h-4" />
                                 </span>
                             </div>
                         </div>
@@ -116,17 +127,18 @@ const AcervoIndex: React.FC = () => {
                 ))}
             </div>
         ) : (
-            <div className="text-center py-20 bg-white rounded-xl border border-dashed border-gray-300">
-                <p className="text-gray-500 text-lg">Nenhum artigo publicado encontrado.</p>
-                <p className="text-gray-400 text-sm mt-2">Os artigos recuperados precisam ser revisados e publicados via Painel de Controle.</p>
-                {searchTerm && (
-                    <button 
-                        onClick={() => setSearchTerm('')}
-                        className="mt-4 text-green-600 font-medium hover:underline"
-                    >
-                        Limpar busca
-                    </button>
-                )}
+            <div className="text-center py-32 bg-white rounded-3xl shadow-sm border border-gray-100">
+                <Search className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                <h3 className="text-xl font-medium text-gray-900 mb-2">Nenhum artigo encontrado</h3>
+                <p className="text-gray-500 max-w-md mx-auto">
+                    Não encontramos nenhum artigo correspondente à sua busca. Tente outros termos ou limpe o filtro.
+                </p>
+                <button 
+                    onClick={() => setSearchTerm('')}
+                    className="mt-6 px-6 py-2 bg-green-600 text-white rounded-full font-medium hover:bg-green-700 transition-colors shadow-lg shadow-green-200"
+                >
+                    Limpar Busca
+                </button>
             </div>
         )}
       </main>
