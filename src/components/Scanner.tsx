@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Activity, CheckCircle, AlertTriangle, Cpu, Search, Brain, Sparkles } from 'lucide-react';
 import { useTelegram } from '../hooks/useTelegram';
 import { saveDossier } from '../utils/dossierStore';
+import { generateSEOArticle, SEOArticle } from '../utils/articleGenerator';
 
 const Scanner: React.FC = () => {
   const [inputVal, setInputVal] = useState('');
@@ -12,6 +13,7 @@ const Scanner: React.FC = () => {
     explanation?: string;
     formula?: string;
     report?: string[]; // Detailed step-by-step report
+    fullArticle?: SEOArticle;
   }
 
   const [aiInsight, setAiInsight] = useState<AIInsightData | null>(null);
@@ -205,14 +207,20 @@ const Scanner: React.FC = () => {
     // Simulate slight delay for "Scanner Effect"
     setTimeout(() => {
         const result = isPrime(targetNum);
-        const insight = getAIInsights(BigInt(targetNum), result.isPrime, result.factors, result.time);
+        const seoArticle = generateSEOArticle(BigInt(targetNum), result.isPrime, result.factors, result.time);
+        
+        // Enrich insight with full article
+        const insight = {
+            ...getAIInsights(BigInt(targetNum), result.isPrime, result.factors, result.time),
+            fullArticle: seoArticle
+        };
         
         setResultData({
             number: targetNum,
-          isPrime: result.isPrime,
-          factors: result.factors,
-          time: result.time
-      });
+            isPrime: result.isPrime,
+            factors: result.factors,
+            executionTime: result.time
+        });
       setAiInsight(insight);
       setResultMessage(result.isPrime ? "ENTIDADE PRIMA CONFIRMADA" : "ENTIDADE COMPOSTA DETECTADA");
       setStatus(result.isPrime ? 'prime' : 'composite');

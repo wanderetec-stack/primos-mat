@@ -155,22 +155,71 @@ const DossierGrid: React.FC = () => {
                     )}
 
                     {/* Full Report */}
-                    {selectedDossier.aiInsight.report && (
-                        <div>
-                            <h4 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-3 flex items-center gap-2">
-                                <FileText size={14} /> Relatório de Processamento
-                            </h4>
-                            <div className="bg-black/30 rounded-xl p-6 border border-white/5 space-y-4 font-mono text-sm">
-                                {selectedDossier.aiInsight.report.map((line, i) => (
-                                    <div key={i} className="flex gap-3 text-gray-400">
-                                        <span className="text-purple-500/50 select-none">{(i+1).toString().padStart(2, '0')}</span>
-                                        <span className={line.includes('CONCLUSÃO') || line.includes('RESULTADO') ? 'text-white font-bold' : ''}>
-                                            {line.replace(/^\d+\.\s/, '')}
-                                        </span>
-                                    </div>
-                                ))}
+                    {selectedDossier.aiInsight.fullArticle ? (
+                         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                             {/* Article Header */}
+                             <div className="border-b border-white/10 pb-6">
+                                 <h1 className="text-3xl md:text-4xl font-bold text-white mb-4 font-mono leading-tight">
+                                     {selectedDossier.aiInsight.fullArticle.title}
+                                 </h1>
+                                 <div className="flex items-center gap-4 text-sm text-gray-500 font-mono">
+                                     <span>{selectedDossier.aiInsight.fullArticle.wordCount} palavras</span>
+                                     <span>•</span>
+                                     <span>Leitura: ~{Math.ceil(selectedDossier.aiInsight.fullArticle.wordCount / 200)} min</span>
+                                 </div>
+                             </div>
+
+                             {/* Dynamic Sections */}
+                             {selectedDossier.aiInsight.fullArticle.sections.map((section, idx) => (
+                                 <div key={idx} className="prose prose-invert max-w-none">
+                                     <h3 className="text-xl font-bold text-purple-400 mb-3 flex items-center gap-2">
+                                         <span className="text-white/20">0{idx + 1}.</span> {section.title}
+                                     </h3>
+                                     <div className="text-gray-300 leading-relaxed whitespace-pre-line bg-white/5 p-6 rounded-xl border border-white/5 hover:border-purple-500/30 transition-colors">
+                                         {section.content}
+                                     </div>
+                                 </div>
+                             ))}
+
+                             {/* FAQ Section (SEO Schema) */}
+                             <div className="bg-black/40 rounded-xl p-8 border border-white/10">
+                                 <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                                     <Brain className="text-primary" /> Perguntas Frequentes
+                                 </h3>
+                                 <div className="space-y-4">
+                                     {selectedDossier.aiInsight.fullArticle.faq.map((item, idx) => (
+                                         <details key={idx} className="group bg-white/5 rounded-lg open:bg-white/10 transition-all">
+                                             <summary className="flex items-center justify-between p-4 cursor-pointer font-bold text-gray-200 hover:text-white list-none">
+                                                 {item.question}
+                                                 <ChevronRight className="transform group-open:rotate-90 transition-transform text-gray-500" />
+                                             </summary>
+                                             <div className="px-4 pb-4 text-gray-400 leading-relaxed border-t border-white/5 pt-4">
+                                                 {item.answer}
+                                             </div>
+                                         </details>
+                                     ))}
+                                 </div>
+                             </div>
+                         </div>
+                    ) : (
+                        // Fallback for old dossiers without full article
+                        selectedDossier.aiInsight.report && (
+                            <div>
+                                <h4 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-3 flex items-center gap-2">
+                                    <FileText size={14} /> Relatório de Processamento (Legacy)
+                                </h4>
+                                <div className="bg-black/30 rounded-xl p-6 border border-white/5 space-y-4 font-mono text-sm">
+                                    {selectedDossier.aiInsight.report.map((line, i) => (
+                                        <div key={i} className="flex gap-3 text-gray-400">
+                                            <span className="text-purple-500/50 select-none">{(i+1).toString().padStart(2, '0')}</span>
+                                            <span className={line.includes('CONCLUSÃO') || line.includes('RESULTADO') ? 'text-white font-bold' : ''}>
+                                                {line.replace(/^\d+\.\s/, '')}
+                                            </span>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
-                        </div>
+                        )
                     )}
 
                     {/* Technical Stats */}

@@ -10,6 +10,7 @@ export interface DossierEntry {
     explanation?: string;
     formula?: string;
     report?: string[];
+    fullArticle?: import('./articleGenerator').SEOArticle; // Add full article structure
   };
 }
 
