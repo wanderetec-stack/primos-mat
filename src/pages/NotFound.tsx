@@ -1,14 +1,39 @@
 
 import React, { useEffect, useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { supabase } from '../services/reconDb';
+import { supabase, ReconService, DraftArticle } from '../services/reconDb';
 import { ShieldAlert, Search, Home } from 'lucide-react';
+import RecoveredPage from './RecoveredPage';
 
 const NotFound: React.FC = () => {
   const location = useLocation();
   const [logStatus, setLogStatus] = useState<'logging' | 'recorded' | 'error'>('logging');
+  const [checking, setChecking] = useState(true);
+  const [recoveredArticle, setRecoveredArticle] = useState<DraftArticle | null>(null);
 
+  // 1. First, check if this is a known legacy URL that has been recovered
   useEffect(() => {
+    const checkRecovery = async () => {
+        // Skip check for admin or obvious system paths
+        if (location.pathname.startsWith('/dashboard') || location.pathname.startsWith('/acervo')) {
+            setChecking(false);
+            return;
+        }
+
+        const article = await ReconService.getPublishedArticleByUrl(location.pathname);
+        if (article) {
+            setRecoveredArticle(article);
+        }
+        setChecking(false);
+    };
+    
+    checkRecovery();
+  }, [location.pathname]);
+
+  // 2. Only log as 404 if NOT recovered
+  useEffect(() => {
+    if (checking || recoveredArticle) return; // Don't log if checking or found
+
     const logTraffic = async () => {
       if (!supabase) {
         setLogStatus('error');
@@ -32,8 +57,26 @@ const NotFound: React.FC = () => {
     };
 
     logTraffic();
-  }, [location]);
+  }, [location, checking, recoveredArticle]);
 
+  // Loading State
+  if (checking) {
+      return (
+        <div className="min-h-screen bg-black flex items-center justify-center text-green-500 font-mono">
+            <div className="flex flex-col items-center gap-4">
+                <Search className="w-8 h-8 animate-spin" />
+                <p>Buscando nos arquivos...</p>
+            </div>
+        </div>
+      );
+  }
+
+  // Success State: Render the Recovered Page
+  if (recoveredArticle) {
+      return <RecoveredPage article={recoveredArticle} />;
+  }
+
+  // 404 State (Original)
   return (
     <div className="min-h-screen bg-black text-green-500 font-mono p-6 flex flex-col items-center justify-center">
       <div className="max-w-2xl w-full border border-green-900 bg-black/90 p-8 rounded shadow-[0_0_20px_rgba(0,255,0,0.1)]">

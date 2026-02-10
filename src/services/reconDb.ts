@@ -4,6 +4,8 @@ export interface RecoveredArticle {
   url: string;
   title: string;
   source: string;
+  status: string;
+  scan_data?: any;
 }
 
 export interface DraftArticle {
@@ -12,6 +14,7 @@ export interface DraftArticle {
   title: string;
   status: string;
   created_at: string;
+  content_markdown?: string;
 }
 
 export interface ReconResult {
@@ -26,6 +29,8 @@ interface ScannedUrl {
   url: string;
   title: string;
   source: string;
+  status: string;
+  scan_data: any;
 }
 
 // Environment variables should be in .env.local
@@ -39,6 +44,124 @@ export const supabase = SUPABASE_URL && SUPABASE_KEY
 
 // Service to fetch data (Hybrid: Supabase -> JSON Fallback)
 export const ReconService = {
+  async getDraftById(id: string): Promise<DraftArticle | null> {
+    if (!supabase) return null;
+    
+    try {
+      const { data, error } = await supabase
+        .from('draft_articles')
+        .select('*')
+        .eq('id', id)
+        .single();
+        
+      if (error) throw error;
+      
+      return data ? {
+        id: data.id,
+        original_url: data.original_url,
+        title: data.title,
+        status: data.status,
+        created_at: data.created_at,
+        content_markdown: data.content_markdown // Include content
+      } as DraftArticle : null;
+      
+    } catch (err) {
+      console.error('Error fetching draft:', err);
+      return null;
+    }
+  },
+
+  async saveDraft(id: string, content: string): Promise<boolean> {
+    if (!supabase) return false;
+    try {
+      const { error } = await supabase
+        .from('draft_articles')
+        .update({ content_markdown: content, updated_at: new Date().toISOString() })
+        .eq('id', id);
+      if (error) throw error;
+      return true;
+    } catch (err) {
+      console.error('Error saving draft:', err);
+      return false;
+    }
+  },
+
+  async publishDraft(id: string): Promise<boolean> {
+    if (!supabase) return false;
+    try {
+      const { error } = await supabase
+        .from('draft_articles')
+        .update({ status: 'published', updated_at: new Date().toISOString() })
+        .eq('id', id);
+      if (error) throw error;
+      return true;
+    } catch (err) {
+      console.error('Error publishing draft:', err);
+      return false;
+    }
+  },
+
+  async getPublishedArticleByUrl(pathname: string): Promise<DraftArticle | null> {
+    if (!supabase) return null;
+    try {
+      // Try to find a published draft that ends with this pathname
+      // Note: original_url is absolute (e.g. https://primos.mat.br/foo.html)
+      // pathname is relative (e.g. /foo.html)
+      
+      const { data, error } = await supabase
+        .from('draft_articles')
+        .select('*')
+        .eq('status', 'published')
+        .ilike('original_url', `%${pathname}`)
+        .limit(1);
+
+      if (error) throw error;
+
+      // Check if we have results
+      if (data && data.length > 0) {
+          const article = data[0];
+          return {
+            id: article.id,
+            original_url: article.original_url,
+            title: article.title,
+            status: article.status,
+            created_at: article.created_at,
+            content_markdown: article.content_markdown
+          } as DraftArticle;
+      }
+      
+      return null;
+    } catch (err) {
+      console.error('Error fetching published article:', err);
+      return null;
+    }
+  },
+
+  async getPublishedArticles(): Promise<DraftArticle[]> {
+    if (!supabase) return [];
+    try {
+      const { data, error } = await supabase
+        .from('draft_articles')
+        .select('*')
+        .eq('status', 'published')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      return (data || []).map(item => ({
+        id: item.id,
+        original_url: item.original_url,
+        title: item.title,
+        status: item.status,
+        created_at: item.created_at,
+        content_markdown: item.content_markdown
+      }));
+    } catch (err) {
+      console.error('Error fetching published articles:', err);
+      return [];
+    }
+  },
+
   async getLatestResults(): Promise<ReconResult> {
     // 1. Try Supabase first (if configured)
     if (supabase) {
@@ -57,7 +180,7 @@ export const ReconService = {
         const { data: scanItems } = await supabase
           .from('scanned_urls')
           .select('*')
-          .eq('status', 'recuperado') // Only show successful recoveries
+          .in('status', ['recuperado', 'referência_externa']) // Show recoveries and external references
           .order('created_at', { ascending: false })
           .limit(20);
 
@@ -72,13 +195,15 @@ export const ReconService = {
         const { count } = await supabase
           .from('scanned_urls')
           .select('*', { count: 'exact', head: true })
-          .eq('status', 'recuperado');
+          .in('status', ['recuperado', 'referência_externa']);
 
         if (scanItems) {
             detailedArticles = scanItems.map((item: ScannedUrl) => ({
                 url: item.url,
                 title: item.title,
-                source: item.source
+                source: item.source,
+                status: item.status,
+                scan_data: item.scan_data
             }));
         }
 

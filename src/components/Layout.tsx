@@ -58,6 +58,17 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage = '' }) => {
               )}
             </a>
             <a 
+              href="/acervo" 
+              className={`relative text-sm font-medium tracking-wide transition-all duration-300 hover:text-primary ${
+                isActive('acervo') ? 'text-primary' : 'text-muted'
+              }`}
+            >
+              O ACERVO
+              {isActive('acervo') && (
+                <span className="absolute -bottom-1 left-0 w-full h-[2px] bg-primary shadow-[0_0_8px_rgba(0,255,65,0.8)] animate-fade-in"></span>
+              )}
+            </a>
+            <a 
               href="sobre.html" 
               className={`relative text-sm font-medium tracking-wide transition-all duration-300 hover:text-primary ${
                 isActive('sobre.html') ? 'text-primary' : 'text-muted'
@@ -78,6 +89,7 @@ const Layout: React.FC<LayoutProps> = ({ children, currentPage = '' }) => {
         {/* Mobile Menu */}
         <div className={`md:hidden absolute top-20 left-0 w-full bg-black/95 backdrop-blur-xl border-b border-white/10 p-6 flex flex-col gap-6 transition-all duration-300 origin-top ${isMenuOpen ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0'}`}>
           <a href="index.html" className="text-lg font-medium hover:text-primary transition-colors">HOME</a>
+          <a href="/acervo" className="text-lg font-medium hover:text-primary transition-colors">O ACERVO</a>
           <a href="sobre.html" className="text-lg font-medium hover:text-primary transition-colors">SOBRE</a>
         </div>
       </header>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Shield, Lock, Activity, Globe, Database, FileText, AlertTriangle, Terminal } from 'lucide-react';
 
 import { ReconService, supabase, ReconResult, RecoveredArticle, DraftArticle } from '../services/reconDb';
@@ -11,6 +12,7 @@ interface TrafficLog {
 }
 
 const ReconDashboard: React.FC = () => {
+  const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -213,7 +215,7 @@ const ReconDashboard: React.FC = () => {
         <div className="bg-gray-900/50 border border-green-900/50 rounded p-6">
           <h3 className="text-lg font-bold mb-4 flex items-center gap-2 border-b border-green-900/50 pb-2">
             <FileText className="w-5 h-5" />
-            Dossiês Prontos para Recriação
+            O Acervo (Links Recuperados)
           </h3>
           <div className="space-y-3">
             {reconData?.recoveredArticles?.map((article: RecoveredArticle, index: number) => (
@@ -243,11 +245,17 @@ const ReconDashboard: React.FC = () => {
                     Status: <span className="text-green-600 uppercase">{article.status}</span>
                   </span>
                   <button 
-                    onClick={() => window.open(`http://web.archive.org/web/2/${'primos.mat.br' + article.url}`, '_blank')}
+                    onClick={() => {
+                      if (article.status === 'referência_externa' && article.scan_data?.referring_url) {
+                        window.open(article.scan_data.referring_url, '_blank');
+                      } else {
+                        window.open(`http://web.archive.org/web/2/${'primos.mat.br' + article.url}`, '_blank');
+                      }
+                    }}
                     className="text-xs bg-green-900/20 hover:bg-green-700/40 text-green-400 py-1 px-3 rounded border border-green-800 hover:border-green-500 transition-all flex items-center gap-1"
                   >
-                    <FileText className="w-3 h-3" />
-                    Visualizar Fonte
+                    {article.status === 'referência_externa' ? <Globe className="w-3 h-3" /> : <FileText className="w-3 h-3" />}
+                    {article.status === 'referência_externa' ? 'Ver Referência' : 'Visualizar Fonte'}
                   </button>
                 </div>
               </div>
@@ -281,7 +289,12 @@ const ReconDashboard: React.FC = () => {
                    <p className="text-xs text-blue-500/70 font-mono mb-3 truncate">{draft.original_url}</p>
                    <div className="flex justify-between items-center text-xs">
                      <span className="text-gray-500">{new Date(draft.created_at).toLocaleDateString()}</span>
-                     <button className="text-blue-400 hover:text-white underline">Editar Rascunho</button>
+                     <button 
+                       onClick={() => navigate(`/acervo/draft/${draft.id}`)}
+                       className="text-blue-400 hover:text-white underline"
+                     >
+                       Editar Rascunho
+                     </button>
                    </div>
                  </div>
                ))

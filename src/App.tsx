@@ -8,6 +8,8 @@ import PerformanceArticle from './pages/PerformanceArticle';
 import TelemetriaArticle from './pages/TelemetriaArticle';
 import NotFound from './pages/NotFound';
 import ReconDashboard from './pages/ReconDashboard';
+import DraftViewer from './pages/DraftViewer';
+import AcervoIndex from './pages/AcervoIndex';
 
 // Auto-Update Component
 const AutoUpdater: React.FC = () => {
@@ -60,14 +62,15 @@ const AutoUpdater: React.FC = () => {
 // Wrapper component to access useLocation hook
 const AppContent: React.FC = () => {
   const location = useLocation();
-  const isReconPage = location.pathname.startsWith('/dashboard-recon-2026-x');
+  const isAdminPage = location.pathname.startsWith('/dashboard-recon-2026-x') || location.pathname.startsWith('/acervo/draft/');
   
-  if (isReconPage) {
+  if (isAdminPage) {
     return (
       <>
         <AutoUpdater />
         <Routes>
           <Route path="/dashboard-recon-2026-x" element={<ReconDashboard />} />
+          <Route path="/acervo/draft/:id" element={<DraftViewer />} />
         </Routes>
       </>
     );
@@ -79,6 +82,7 @@ const AppContent: React.FC = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/index.html" element={<Home />} />
+        <Route path="/acervo" element={<AcervoIndex />} />
         <Route path="/criptografia-rsa-seguranca" element={<CriptografiaArticle />} />
         <Route path="/teoria-dos-numeros-primos" element={<TeoriaNumerosArticle />} />
         <Route path="/engenharia-performance-web" element={<PerformanceArticle />} />

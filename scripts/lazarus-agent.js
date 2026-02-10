@@ -10,7 +10,7 @@ const { Client } = pkg;
 const turndownService = new TurndownService();
 
 // Config
-const BATCH_SIZE = 5;
+const BATCH_SIZE = 50;
 
 const client = new Client({
   connectionString: process.env.DATABASE_URL,

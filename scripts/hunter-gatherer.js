@@ -6,8 +6,8 @@ dotenv.config();
 
 const { Client } = pkg;
 const TARGET_DOMAIN = 'primos.mat.br';
-// Limit set to 3000 to avoid memory issues, can be increased for deep archival dig
-const CDX_API = `http://web.archive.org/cdx/search/cdx?url=${TARGET_DOMAIN}/*&output=json&limit=100000`;
+// Limit set to 5,000,000 for massive deep archival dig
+const CDX_API = `https://web.archive.org/cdx/search/cdx?url=${TARGET_DOMAIN}/*&output=json&limit=5000000`;
 
 const client = new Client({
   connectionString: process.env.DATABASE_URL,
@@ -15,12 +15,18 @@ const client = new Client({
 });
 
 async function hunterGatherer() {
-  console.log('🏹 Hunter-Gatherer Module Initiated...');
+  console.log('🏹 Hunter-Gatherer Module Initiated (MASSIVE MODE)...');
   console.log(`🌍 Target Domain: ${TARGET_DOMAIN}`);
+  console.log('🚀 Capacity: 5,000,000 records');
   console.log('⏳ Querying Wayback Machine CDX Index...');
 
   try {
-    const response = await axios.get(CDX_API, { timeout: 60000 });
+    const response = await axios.get(CDX_API, { 
+      timeout: 300000,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; PrimosMatBot/1.0; +https://primos.mat.br)'
+      }
+    });
     const data = response.data;
 
     if (!data || data.length === 0) {
